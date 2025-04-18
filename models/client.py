@@ -1,10 +1,8 @@
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from models.reservation import Reservation
+
 
 class Client(SQLModel, table=True):
     __tablename__ = "client"  # Nombre explícito de la tabla
@@ -34,3 +32,8 @@ class ClientUpdate(SQLModel):
 
 class ClientRead(ClientBase):
     id: int
+
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from models.reservation import Reservation

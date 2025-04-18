@@ -1,9 +1,5 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional, List
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from models.reservation import Reservation
-
 
 
 class ReservationStatus(SQLModel, table=True):
@@ -13,7 +9,7 @@ class ReservationStatus(SQLModel, table=True):
     name: str = Field(max_length=30)
     description: str = Field(max_length=100)
 
-    reservations: List["Reservation"] = Relationship(back_populates="reservation_statues")
+    reservations: List["Reservation"] = Relationship(back_populates="reservation_status") # Cambiado aquí
 
 
 class ReservationStatusBase(SQLModel):
@@ -29,3 +25,8 @@ class ReservationStatusUpdate(SQLModel):
 
 class ReservationStatusRead(ReservationStatusBase):
     id: int
+
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from models.reservation import Reservation

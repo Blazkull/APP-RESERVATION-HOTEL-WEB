@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.database import create_db_and_tables
-from routers import users, categories, reservations
+from routers import users, reservations,usertypes
 from fastapi.middleware.cors import CORSMiddleware # habilitar CROS (conexion con frontend)
 
 app = FastAPI()
@@ -10,8 +10,9 @@ def startup():
     create_db_and_tables()
 
 app.include_router(users.router)
-app.include_router(categories.router)
-app.include_router(reservations.router)
+#app.include_router(reservations.router)
+app.include_router(usertypes.router)
+
 
 
 origins = [

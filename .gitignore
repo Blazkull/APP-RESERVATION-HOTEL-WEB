@@ -1,0 +1,16 @@
+\local
+__pycache__
+.env
+*.__pycache__
+/app/__pycache__
+/core/__pycache__
+/core/__pycache__
+*.pyc
+app/__pycache__/main.cpython-312.pyc
+/app/__pycache__
+*.pyc
+routers/__pycache__/__init__.cpython-312.pyc
+routers/__pycache__/categories.cpython-312.pyc
+routers/__pycache__/reservations.cpython-312.pyc
+routers/__pycache__/users.cpython-312.pyc
+routers/__pycache__/usertypes.cpython-312.pyc
