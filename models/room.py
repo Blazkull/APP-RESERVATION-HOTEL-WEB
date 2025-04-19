@@ -1,7 +1,6 @@
 from decimal import Decimal
 from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
-from pydantic import EmailStr
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -9,30 +8,31 @@ if TYPE_CHECKING:
     from models.room_type import RoomType
     from models.room_status import RoomStatus
 
-class Room(SQLModel, table=True):
-    __tablename__ = "room"  # Nombre explícito de la tabla
-
-    id: Optional[int] = Field(default=None, primary_key=True)
+class RoomBase(SQLModel):
     room_number: str = Field(max_length=30)
     price_per_night: Decimal
     capacity: int = Field(default=1)
-    room_type_id: int = Field(foreign_key="roomtype.id") 
-    room_status_id: int = Field(foreign_key="roomstatus.id") 
+    room_type_id: int = Field(foreign_key="roomtype.id")
+    room_status_id: int = Field(foreign_key="roomstatus.id")
+
+class Room(RoomBase, table=True):
+    __tablename__ = "room"  # Nombre explícito de la tabla
+
+    id: Optional[int] = Field(default=None, primary_key=True)
 
     reservations: List["Reservation"] = Relationship(back_populates="room")
-    room: Optional["RoomType"] = Relationship(back_populates="room_type")
-    room: Optional["RoomStatus"] = Relationship(back_populates="room_status")
-
-class RoomBase(SQLModel):
-    username: str = Field(max_length=30)
-    email: EmailStr = Field(max_length=100)
+    room_type: Optional["RoomType"] = Relationship(back_populates="rooms") # name update
+    room_status: Optional["RoomStatus"] = Relationship(back_populates="rooms") # nombre y back populate update
 
 class RoomCreate(RoomBase):
-    password: str = Field(min_length=6, max_length=100)
+    pass
 
 class RoomUpdate(SQLModel):
-    username: Optional[str] = Field(default=None, max_length=30)
-    email: Optional[EmailStr] = None
+    room_number: Optional[str] = Field(default=None, max_length=30)
+    price_per_night: Optional[Decimal] = None
+    capacity: Optional[int] = Field(default=None)
+    room_type_id: Optional[int] = Field(default=None, foreign_key="roomtype.id")
+    room_status_id: Optional[int] = Field(default=None, foreign_key="roomstatus.id")
 
 class RoomRead(RoomBase):
     id: int
