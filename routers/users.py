@@ -25,8 +25,8 @@ async def read_user(user_id: int, session: SessionDep):
 
 #crear tipo de usuario
 @router.post("/api/user", response_model=User, status_code=status.HTTP_201_CREATED ,tags=["USER"])
-async def create_user(customer_data: UserCreate,session: SessionDep):
-    user = User.model_validate(customer_data.model_dump())
+async def create_user(user_data: UserCreate,session: SessionDep):
+    user = User.model_validate(user_data.model_dump())
 
     session.add(user)#insertamos datos
     session.commit()#conectamos la bd
@@ -37,8 +37,8 @@ async def create_user(customer_data: UserCreate,session: SessionDep):
 
 # obtener customer por id para eliminar
 @router.delete("/api/user/{user_id}", tags=["USER"])
-async def delete_user(customer_id: int, session: SessionDep):
-    user_db = session.get(User, customer_id)
+async def delete_user(user_id: int, session: SessionDep):
+    user_db = session.get(User, user_id)
     if not user_db:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exits"
@@ -48,8 +48,8 @@ async def delete_user(customer_id: int, session: SessionDep):
     return {"detail": "ok"}
 
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_201_CREATED, tags=["USER TYPES"])
-async def update_usertype( user_id: int, user_data: UserUpdate, session: SessionDep):
+@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_201_CREATED, tags=["USER"])
+async def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
     user_db = session.get(User, user_id)
     if not user_db:
         raise HTTPException(
