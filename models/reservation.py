@@ -15,7 +15,7 @@ class Reservation(SQLModel, table=True):
     total: Decimal = Field(default=Decimal(0.00))
 
     user: Optional["User"] = Relationship(back_populates="reservations")
-    reservation_statues: Optional["ReservationStatus"] = Relationship(back_populates="reservations") # Cambiado aquí
+    reservation_status : Optional["ReservationStatus"] = Relationship(back_populates="reservations") 
     client: Optional["Client"] = Relationship(back_populates="reservations")
     room: Optional["Room"] = Relationship(back_populates="reservations")
 
