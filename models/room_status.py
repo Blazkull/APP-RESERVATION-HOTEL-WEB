@@ -4,8 +4,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from models.room import Room
 
-
-
 class RoomStatus(SQLModel, table=True):
     __tablename__ = "roomstatus"  # Nombre explícito de la tabla
 
@@ -13,8 +11,7 @@ class RoomStatus(SQLModel, table=True):
     name: str = Field(max_length=30)
     description: str = Field(max_length=100)
 
-    rooms: List["Room"] = Relationship(back_populates="room_statues")
-
+    rooms: List["Room"] = Relationship(back_populates="room_status") #---
 
 class RoomStatusBase(SQLModel):
     name: str = Field(max_length=30)

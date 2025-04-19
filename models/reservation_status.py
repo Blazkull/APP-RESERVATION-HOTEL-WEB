@@ -9,7 +9,7 @@ class ReservationStatus(SQLModel, table=True):
     name: str = Field(max_length=30)
     description: str = Field(max_length=100)
 
-    reservations: List["Reservation"] = Relationship(back_populates="reservation_status") # Cambiado aquí
+    reservations: List["Reservation"] = Relationship(back_populates="reservation_status") 
 
 
 class ReservationStatusBase(SQLModel):
