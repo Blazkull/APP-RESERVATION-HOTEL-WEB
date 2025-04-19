@@ -24,7 +24,7 @@ async def read_usertype(usertype_id: int, session: SessionDep):
     return usertype_db
 
 #crear tipo de usuario
-@router.post("/api/usertypes", response_model=UserType, tags=["USER TYPES"])
+@router.post("/api/usertypes", response_model=UserType,status_code=status.HTTP_201_CREATED,tags=["USER TYPES"])
 async def create_usertype(customer_data: UserTypeCreate,session: SessionDep):
     usertype = UserType.model_validate(customer_data.model_dump())
 
@@ -37,8 +37,8 @@ async def create_usertype(customer_data: UserTypeCreate,session: SessionDep):
 
 # obtener customer por id para eliminar
 @router.delete("/api/usertypes/{usertype_id}", tags=["USER TYPES"])
-async def delete_usertype(customer_id: int, session: SessionDep):
-    usertype_db = session.get(UserType, customer_id)
+async def delete_usertype(usertype_id: int, session: SessionDep):
+    usertype_db = session.get(UserType, usertype_id)
     if not usertype_db:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User Type doesn't exits"
@@ -48,12 +48,12 @@ async def delete_usertype(customer_id: int, session: SessionDep):
     return {"detail": "ok"}
 
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/usertypes/{usertype_id}", response_model=UserType, status_code=status.HTTP_201_CREATED, tags=["USER TYPES"])
+@router.patch("/api/usertypes/{usertype_id}", response_model=UserType, tags=["USER TYPES"])
 async def update_usertype( usertype_id: int, usertype_data: UserTypeUpdate, session: SessionDep):
     usertype_db = session.get(UserType, usertype_id)
     if not usertype_db:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Customer doesn't exits"
+            status_code=status.HTTP_404_NOT_FOUND, detail="User type doesn't exits"
         )#status.http y el codigo y detail es para el mensaje que retorna
     
 

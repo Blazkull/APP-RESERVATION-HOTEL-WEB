@@ -2,21 +2,23 @@ from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
 
-
-class User(SQLModel, table=True):
-    __tablename__ = "user"  # Nombre explícito de la tabla
-
-    id: Optional[int] = Field(default=None, primary_key=True)
+class UserBase(SQLModel):
     username: str = Field(max_length=30)
     email: EmailStr = Field(max_length=100)
     password: str = Field(max_length=100)
     user_type_id: int = Field(foreign_key="usertype.id") 
 
+class User(UserBase, table=True):
+    __tablename__ = "user"  # Nombre de tabla
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    
+
     reservations: List["Reservation"] = Relationship(back_populates="user")
     user_type: Optional["UserType"] = Relationship(back_populates="users")
 
 
-class UserBase(SQLModel):
+class UserLogin(SQLModel):
     username: str = Field(max_length=30)
     email: EmailStr = Field(max_length=100)
 
