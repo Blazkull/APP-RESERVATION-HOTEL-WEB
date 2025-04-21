@@ -19,7 +19,6 @@ app.include_router(room.router)
 
 
 
-
 origins = [
     "http://localhost",
     "http://localhost:8080",
