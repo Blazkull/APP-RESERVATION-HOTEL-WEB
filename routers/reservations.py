@@ -14,10 +14,11 @@ def calculate_total_reservation(session: SessionDep, reservation: Reservation) -
     """Calcula el total de la reserva basado en las fechas y el precio por noche de la habitación."""
     room = session.exec(select(Room).where(Room.id == reservation.room_id)).first()
     if room:
-        duration = reservation.check_out_date - reservation.check_in_date
+        duration = reservation.check_in_out - reservation.check_in_date
         total = room.price_per_night * Decimal(duration.days)
         return total
     return Decimal(0.00)
+    
 
 # POST para crear una nueva reserva
 @router.post("/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"])

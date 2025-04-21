@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from core.database import create_db_and_tables
-from routers import usertypes,users,clients,roomtypes,roomstatus,room
+from routers import usertypes,users,clients,roomtypes,roomstatus,room,reservations
 from fastapi.middleware.cors import CORSMiddleware # habilitar CROS (conexion con frontend)
 
 app = FastAPI()
@@ -15,7 +15,7 @@ app.include_router(clients.router)
 app.include_router(roomtypes.router)
 app.include_router(roomstatus.router)
 app.include_router(room.router)
-#app.include_router(reservations.router)
+app.include_router(reservations.router)
 
 
 
