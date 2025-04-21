@@ -11,13 +11,16 @@ class Reservation(SQLModel, table=True):
     room_id : int = Field(foreign_key="room.id")
     check_in_date: date
     check_in_out: date
-    note: str
+    note: str = Field(max_length=100)
     total: Decimal = Field(default=Decimal(0.00))
 
     user: Optional["User"] = Relationship(back_populates="reservations")
     reservation_status : Optional["ReservationStatus"] = Relationship(back_populates="reservations") 
     client: Optional["Client"] = Relationship(back_populates="reservations")
     room: Optional["Room"] = Relationship(back_populates="reservations")
+
+
+
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:

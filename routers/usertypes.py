@@ -25,8 +25,8 @@ async def read_usertype(usertype_id: int, session: SessionDep):
 
 #crear tipo de usuario
 @router.post("/api/usertypes", response_model=UserType,status_code=status.HTTP_201_CREATED,tags=["USER TYPES"])
-async def create_usertype(customer_data: UserTypeCreate,session: SessionDep):
-    usertype = UserType.model_validate(customer_data.model_dump())
+async def create_usertype(user_types_data: UserTypeCreate,session: SessionDep):
+    usertype = UserType.model_validate(user_types_data.model_dump())
 
     session.add(usertype)#insertamos datos
     session.commit()#conectamos la bd
@@ -35,8 +35,8 @@ async def create_usertype(customer_data: UserTypeCreate,session: SessionDep):
 
 
 
-# obtener customer por id para eliminar
-@router.delete("/api/usertypes/{usertype_id}", tags=["USER TYPES"])
+# obtener user_types por id para eliminar
+@router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["USER TYPES"])
 async def delete_usertype(usertype_id: int, session: SessionDep):
     usertype_db = session.get(UserType, usertype_id)
     if not usertype_db:

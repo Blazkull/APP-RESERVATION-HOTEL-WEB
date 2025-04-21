@@ -35,8 +35,8 @@ async def create_user(user_data: UserCreate,session: SessionDep):
 
 
 
-# obtener customer por id para eliminar
-@router.delete("/api/user/{user_id}", tags=["USER"])
+# obtener User por id para eliminar
+@router.delete("/api/user/{user_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["USER"])
 async def delete_user(user_id: int, session: SessionDep):
     user_db = session.get(User, user_id)
     if not user_db:
@@ -48,7 +48,7 @@ async def delete_user(user_id: int, session: SessionDep):
     return {"detail": "ok"}
 
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_201_CREATED, tags=["USER"])
+@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_200_OK, tags=["USER"])
 async def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
     user_db = session.get(User, user_id)
     if not user_db:
