@@ -35,6 +35,8 @@ async def create_usertype(user_types_data: UserTypeCreate,session: SessionDep):
 
 
 
+
+
 # obtener user_types por id para eliminar
 @router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["USER TYPES"])
 async def delete_usertype(usertype_id: int, session: SessionDep):
