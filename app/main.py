@@ -2,7 +2,7 @@ import os
 import uvicorn
 from fastapi import FastAPI
 from core.database import create_db_and_tables
-from routers import usertypes, users, clients, roomtypes, roomstatus, room, reservations
+from routers import usertypes, users, clients, roomtypes, roomstatus, room, reservations,reservation_statues
 from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
 
 app = FastAPI()
@@ -23,6 +23,7 @@ app.include_router(roomtypes.router)
 app.include_router(roomstatus.router)
 app.include_router(room.router)
 app.include_router(reservations.router)
+app.include_router(reservation_statues.router)
 
 # Configuración de CORS
 origins = [
