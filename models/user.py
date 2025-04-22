@@ -32,6 +32,12 @@ class UserUpdate(SQLModel):
 class UserRead(UserBase):
     id: int
 
+
+class Login(SQLModel):
+   username: str = Field(max_length=30)
+   password: str = Field(max_length=100)
+
+   
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
