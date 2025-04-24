@@ -27,7 +27,7 @@ class ClientBase(SQLModel):
 class ClientCreate(ClientBase):
     pass
 
-class ClientUpdate(SQLModel):
+class ClientUpdate(ClientBase):
     pass
 
 class ClientRead(ClientBase):
