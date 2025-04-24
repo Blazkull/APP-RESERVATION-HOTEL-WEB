@@ -28,6 +28,7 @@ app.include_router(reservation_statues.router)
 # Configuración de CORS
 origins = [
     "http://localhost",
+    "http://127.0.0.1:5500",
     "http://localhost:8080",
     "https://mi-dominio.com",
     "https://otro-dominio.net",
