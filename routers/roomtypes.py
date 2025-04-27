@@ -57,7 +57,7 @@ def create_roomtype(room_types_data: RoomTypeCreate,session: SessionDep):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating client: {str(e)}",
+            detail=f"An error occurred while creating romm type: {str(e)}",
         )
 
     
@@ -66,7 +66,7 @@ def create_roomtype(room_types_data: RoomTypeCreate,session: SessionDep):
 
 # obtener room_types por id para eliminar
 @router.delete("/api/roomtypes/{roomtype_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM TYPES"])
-async def delete_roomtype(roomtype_id: int, session: SessionDep):
+def delete_roomtype(roomtype_id: int, session: SessionDep):
     
     try:
         roomtype_db = session.get(RoomType, roomtype_id)
@@ -85,7 +85,7 @@ async def delete_roomtype(roomtype_id: int, session: SessionDep):
 
 # obtener tipo de habitacion por id para actualizar
 @router.patch("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"])
-async def update_roomtype( roomtype_id: int, roomtype_data: RoomTypeUpdate, session: SessionDep):
+def update_roomtype( roomtype_id: int, roomtype_data: RoomTypeUpdate, session: SessionDep):
    
     
 
@@ -127,5 +127,5 @@ async def update_roomtype( roomtype_id: int, roomtype_data: RoomTypeUpdate, sess
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating client: {str(e)}",
+            detail=f"An error occurred while creating room type: {str(e)}",
         )

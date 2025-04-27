@@ -35,7 +35,7 @@ def read_usertype(usertype_id: int, session: SessionDep):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while deleting client: {str(e)}",
+            detail=f"An error occurred while deleting user type: {str(e)}",
         )
 
 
@@ -66,7 +66,7 @@ def create_user(user_type_data: UserTypeCreate,session: SessionDep):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating client: {str(e)}",
+            detail=f"An error occurred while creating user type: {str(e)}",
         )
 
 
@@ -127,7 +127,7 @@ def update_usertype( usertype_id: int, usertype_data: UserTypeUpdate, session: S
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating client: {str(e)}",
+            detail=f"An error occurred while creating user type: {str(e)}",
         )
     
 

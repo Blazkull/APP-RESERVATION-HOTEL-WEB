@@ -68,7 +68,7 @@ def create_user(user_data: UserCreate,session: SessionDep):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating client: {str(e)}",
+            detail=f"An error occurred while creating user: {str(e)}",
         )
    
 
@@ -135,7 +135,7 @@ def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while updating client: {str(e)}",
+            detail=f"An error occurred while updating user: {str(e)}",
         )
 
     

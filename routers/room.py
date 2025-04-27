@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Query, status, HTTPException
+from pydantic import ValidationError
 from sqlmodel import select
 
 from models.room import Room, RoomCreate, RoomUpdate
@@ -10,64 +11,126 @@ router = APIRouter()
 
 #lista de tipos de room
 @router.get("/api/room", response_model=List[Room], tags=["ROOM"])
-async def list_room(
+def list_room(
     session: SessionDep,
     #paginacion
     page: int = Query(1, ge=1, description="Número de página a obtener"),
     limit: int = Query(10, ge=1, le=100, description="Cantidad de items por página"),
     ):
-    offset = (page - 1) * limit
-    rooms = session.exec(select(Room).offset(offset).limit(limit)).all()
-    return rooms
+    try:
+        offset = (page - 1) * limit
+        rooms = session.exec(select(Room).offset(offset).limit(limit)).all()
+        return rooms
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while deleting room: {str(e)}",
+        )
 
 
 # obtener tipo de room por id para listar
 @router.get("/api/room/{room_id}", response_model=Room, tags=["ROOM"])
-async def read_room(room_id: int, session: SessionDep):
-    room_db = session.get(Room, room_id)
-    if not room_db:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
-        )#status.http y el codigo y detail es para el mensaje que retorna
-    return room_db
+def read_room(room_id: int, session: SessionDep):
 
+    try:
+        room_db = session.get(Room, room_id)
+        if not room_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
+            )#status.http y el codigo y detail es para el mensaje que retorna
+        return room_db
+    except HTTPException as http_exc:
+    # Re-raise HTTPExceptions to avoid them being caught by the general Exception handler
+        raise http_exc
+    except ValidationError as ve:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while creating room: {str(e)}",
+        )
 #crear tipo de room
 @router.post("/api/room", response_model=Room, status_code=status.HTTP_201_CREATED ,tags=["ROOM"])
-async def create_room(room_data: RoomCreate,session: SessionDep):
-    room = Room.model_validate(room_data.model_dump())
+def create_room(room_data: RoomCreate,session: SessionDep):
 
-    session.add(room)#insertamos datos
-    session.commit()#conectamos la bd
-    session.refresh(room)#refrescamos despues de insertar datos
-    return room
-
+    try:
+        room = Room.model_validate(room_data.model_dump())
+        existing_room=session.exec(select(Room).where(Room.room_number == room.room_number)).first()
+        if existing_room:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,detail="Room already registered"
+            )
+        session.add(room)#insertamos datos
+        session.commit()#conectamos la bd
+        session.refresh(room)#refrescamos despues de insertar datos
+        return room
+    except HTTPException as http_exc:
+    # Re-raise HTTPExceptions to avoid them being caught by the general Exception handler
+        raise http_exc
+    except ValidationError as ve:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while creating room: {str(e)}",
+        )
 
 
 # obtener Room por id para eliminar
 @router.delete("/api/room/{room_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM"])
-async def delete_room(room_id: int, session: SessionDep):
-    room_db = session.get(Room, room_id)
-    if not room_db:
+def delete_room(room_id: int, session: SessionDep):
+
+    try:
+        room_db = session.get(Room, room_id)
+        if not room_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
+            )
+        session.delete(room_db)
+        session.commit()
+        return {"detail": "Room delete succes"}
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while deleting room: {str(e)}",
         )
-    session.delete(room_db)
-    session.commit()
-    return {"detail": "ok"}
+    
 
 # obtener tipo de room por id para actualizar
 @router.patch("/api/room/{room_id}", response_model=Room, status_code=status.HTTP_200_OK, tags=["ROOM"])
-async def update_room( room_id: int, room_data: RoomUpdate, session: SessionDep):
-    room_db = session.get(Room, room_id)
-    if not room_db:
+def update_room( room_id: int, room_data: RoomUpdate, session: SessionDep):
+
+    try:
+        room_db = session.get(Room, room_id)
+        if not room_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
+            )#status.http y el codigo y detail es para el mensaje que retorna
+        room_data_dict=room_data.model_dump(exclude_unset=True)
+        if "room_number" in room_data_dict and room_data_dict["room_number"] != room_db.name:
+                existing_usertype = session.exec(select(Room).where(Room.room_db == room_data_dict["room_db"])).first()
+                if existing_usertype and existing_usertype.id != room_id:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST, detail="User already registered"
+                    )
+        room_db.sqlmodel_update(room_data_dict)
+        session.add(room_db)
+        session.commit()
+        session.refresh(room_db)
+        return room_db
+    except HTTPException as http_exc:
+    # Re-raise HTTPExceptions to avoid them being caught by the general Exception handler
+        raise http_exc
+    except ValidationError as ve:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
-        )#status.http y el codigo y detail es para el mensaje que retorna
-
-
-    room_data_dict=room_data.model_dump(exclude_unset=True)# esto evita que se envien datos vacios a la base de datos
-    room_db.sqlmodel_update(room_data_dict)
-    session.add(room_db)
-    session.commit()
-    session.refresh(room_db)
-    return room_db
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while creating room: {str(e)}",
+        )
