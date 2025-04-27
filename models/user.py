@@ -17,7 +17,6 @@ class User(UserBase, table=True):
     reservations: List["Reservation"] = Relationship(back_populates="user")
     user_type: Optional["UserType"] = Relationship(back_populates="users")
 
-
 class UserLogin(SQLModel):
     username: str = Field(max_length=30)
     email: EmailStr = Field(max_length=100)
