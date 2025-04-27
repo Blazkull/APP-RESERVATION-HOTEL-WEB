@@ -3,8 +3,8 @@ from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
 
 class UserBase(SQLModel):
-    username: str = Field(max_length=30)
-    email: EmailStr = Field(max_length=100)
+    username: str = Field(max_length=30,unique=True)
+    email: EmailStr = Field(max_length=100,unique=True)
     password: str = Field(max_length=100)
     user_type_id: int = Field(foreign_key="usertype.id") 
 
