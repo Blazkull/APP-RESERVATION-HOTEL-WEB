@@ -83,7 +83,7 @@ def delete_usertype(usertype_id: int, session: SessionDep):
             )
         session.delete(usertype_db)
         session.commit()
-        return {"detail": "ok"}
+        return {"detail": "user type deleted succesfully"}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -110,7 +110,6 @@ def update_usertype( usertype_id: int, usertype_data: UserTypeUpdate, session: S
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST, detail="User already registered"
                 )
-        usertype_data_dict=usertype_data.model_dump(exclude_unset=True)# esto evita que se envien datos vacios a la base de datos
         usertype_db.sqlmodel_update(usertype_data_dict)
         session.add(usertype_db)
         session.commit()

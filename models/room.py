@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from models.room_status import RoomStatus
 
 class RoomBase(SQLModel):
-    room_number: str = Field(max_length=30)
+    room_number: str = Field(max_length=30,unique=True)
     price_per_night: Decimal
     capacity: int = Field(default=1)
     room_type_id: int = Field(foreign_key="roomtype.id")

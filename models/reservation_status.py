@@ -6,7 +6,7 @@ class ReservationStatus(SQLModel, table=True):
     __tablename__ = "reservationstatus"  # Nombre explícito de la tabla
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(max_length=30)
+    name: str = Field(max_length=30,unique=True)
     description: str = Field(max_length=100)
 
     reservations: List["Reservation"] = Relationship(back_populates="reservation_status") 

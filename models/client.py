@@ -33,7 +33,6 @@ class ClientUpdate(ClientBase):
 class ClientRead(ClientBase):
     id: int
 
-
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from models.reservation import Reservation
