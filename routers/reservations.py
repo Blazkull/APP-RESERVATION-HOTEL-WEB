@@ -89,7 +89,7 @@ def read_reservation(reservation_id: int, session: SessionDep):
         )
 
 # GET para obtener todas las reservas (con paginación opcional)
-@router.get("/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"])
 def read_all_reservations(
     session: SessionDep,
     page: Optional[int] = Query(1, ge=1, description="Número de página a obtener"),
@@ -114,7 +114,7 @@ def read_all_reservations(
         )
 
 # PUT para actualizar una reserva existente (usando PATCH semánticamente más correcto para actualizaciones parciales)
-@router.patch("/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"])
 def update_reservation(reservation_id: int, reservation_update: ReservationUpdate, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
@@ -146,7 +146,7 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
         )
 
 # DELETE para eliminar una reserva
-@router.delete("/reservations/{reservation_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["RESERVATION"])
+@router.delete("/api/reservations/{reservation_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["RESERVATION"])
 def delete_reservation(reservation_id: int, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
