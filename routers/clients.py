@@ -1,6 +1,6 @@
-from fastapi import APIRouter, status, HTTPException, Query
+from fastapi import APIRouter, status, HTTPException
 from pydantic import ValidationError
-from sqlmodel import select, Session
+from sqlmodel import select
 from models.client import Client, ClientCreate, ClientUpdate
 from core.database import SessionDep
 
