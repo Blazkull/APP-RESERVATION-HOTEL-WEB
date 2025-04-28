@@ -9,18 +9,15 @@ router = APIRouter()
 
 # lista de tipos de usuario
 @router.get("/api/client", response_model=list[Client], tags=["CLIENT"])
-def list_client(
-    session: SessionDep):
+def list_client(session: SessionDep):
     try:
-        clients = session.exec().all()
+        clients = session.exec(select(Client)).all()
         return clients
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred while retrieving clients: {str(e)}",
         )
-
-
 
 # obtener tipo de usuario por id para listar
 @router.get("/api/client/{client_id}", response_model=Client, tags=["CLIENT"])

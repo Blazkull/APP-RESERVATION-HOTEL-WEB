@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from core.database import create_db_and_tables
 from routers import usertypes, users, clients, roomtypes, roomstatus, room, reservations,reservation_statues,login
 from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
-
 app = FastAPI()
 
 @app.on_event("startup")
