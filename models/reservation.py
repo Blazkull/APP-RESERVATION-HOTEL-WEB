@@ -10,7 +10,7 @@ class Reservation(SQLModel, table=True):
     client_id : int = Field(foreign_key="client.id")
     room_id : int = Field(foreign_key="room.id")
     check_in_date: date
-    check_in_out: date
+    check_out_date: date
     note: str = Field(max_length=100)
     total: Decimal = Field(default=Decimal(0.00))
 
@@ -26,7 +26,7 @@ class ReservationBase(SQLModel):
     client_id: int = Field(foreign_key="client.id")
     room_id: int = Field(foreign_key="room.id")
     check_in_date: date
-    check_in_out: date  # Assuming this is the check-out date based on context
+    check_out_date: date  # Assuming this is the check-out date based on context
     note: str = Field(max_length=100)
     total: Decimal = Field(default=Decimal(0.00))
 
@@ -45,7 +45,7 @@ class ReservationUpdate(SQLModel):
     client_id: Optional[int] = None
     room_id: Optional[int] = None
     check_in_date: Optional[date] = None
-    check_in_out: Optional[date] = None
+    check_out_date: Optional[date] = None
     note: Optional[str] = None
     total: Optional[Decimal] = None
 
