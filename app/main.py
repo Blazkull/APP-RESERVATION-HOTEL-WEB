@@ -1,10 +1,16 @@
 import os
+from fastapi.responses import HTMLResponse
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from core.database import create_db_and_tables
-from routers import usertypes, users, clients, roomtypes, roomstatus, room, reservations,reservation_statues,login
+from routers import login, usertypes, users, clients, roomtypes, roomstatus, room, reservations, reservation_statues
 from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
+from fastapi.templating import Jinja2Templates
+
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
+
 
 @app.on_event("startup")
 def startup():
@@ -13,6 +19,12 @@ def startup():
 @app.get("/")
 def read_root():
     return {"message": "API en línea en Render"}
+
+
+@app.get("/login", response_class=HTMLResponse)
+def show_login_form(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
 
 # Inclusión de rutas
 app.include_router(users.router)
@@ -23,7 +35,9 @@ app.include_router(roomstatus.router)
 app.include_router(room.router)
 app.include_router(reservations.router)
 app.include_router(reservation_statues.router)
-app.include_router(login.router)
+app.include_router(login.router) 
+
+
 
 # Configuración de CORS
 origins = [
