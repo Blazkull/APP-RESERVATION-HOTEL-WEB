@@ -13,6 +13,7 @@ class User(UserBase, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     
+    
 
     reservations: List["Reservation"] = Relationship(back_populates="user")
     user_type: Optional["UserType"] = Relationship(back_populates="users")
@@ -36,6 +37,10 @@ class Login(SQLModel):
    username: str = Field(max_length=30)
    password: str = Field(max_length=100)
 
+
+class PasswordUpdate(SQLModel):
+    password: str = Field(max_length=100)
+    
    
 from typing import TYPE_CHECKING
 
