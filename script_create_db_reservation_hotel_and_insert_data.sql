@@ -1,17 +1,18 @@
-create database db_hotel_reservations;
+create database db_reservation_hotel;
+use db_reservation_hotel;
 
-use db_hotel_reservations;
 
 INSERT INTO usertype (name, description) VALUES
 ('Admin', 'Administrador del sistema'),
 ('Recepcionista', 'Empleado de recepción'),
 ('Gerente', 'Encargado general del hotel');
 
-INSERT INTO user (username, email, password, user_type_id) VALUES
-('admin1', 'admin1@hotel.com', 'hashed_password1', 1),
-('recepcion1', 'recepcion1@hotel.com', 'hashed_password2', 2),
-('recepcion2', 'recepcion2@hotel.com', 'hashed_password3', 2),
-('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3);
+select *from user;
+INSERT INTO user (username, email, password, user_type_id,active) VALUES
+('admin1', 'admin1@hotel.com', 'hashed_password1', 1,true),
+('recepcion1', 'recepcion1@hotel.com', 'hashed_password2', 2,true),
+('recepcion2', 'recepcion2@hotel.com', 'hashed_password3', 2,true),
+('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3,true);
 
 INSERT INTO roomstatus (name, description) VALUES
 ('Disponible', 'Habitación disponible'),
@@ -25,27 +26,27 @@ INSERT INTO roomtype (name, description) VALUES
 ('Suite Jr.', 'Espaciosa, zona estar separada, familias/largas.'),
 ('Suite Pres.', 'Lujosa, múltiples estancias, alta gama, exclusiva.');
 
-INSERT INTO room (room_number, price_per_night, capacity, room_type_id, room_status_id) VALUES
-('101', 50, 1, 1, 1),
-('102', 60, 1, 1, 1),
-('103', 80, 2, 2, 1),
-('104', 90, 2, 2, 2),
-('201', 120, 3, 3, 1),
-('202', 130, 3, 3, 3),
-('203', 140, 3, 3, 1),
-('204', 150, 3, 3, 4),
-('301', 200, 4, 4, 1),
-('302', 210, 4, 4, 1),
-('303', 220, 4, 4, 2),
-('304', 230, 4, 4, 3),
-('401', 250, 2, 2, 1),
-('402', 260, 2, 2, 4),
-('403', 270, 1, 1, 1),
-('404', 280, 1, 1, 3),
-('501', 300, 3, 3, 1),
-('502', 310, 3, 3, 2),
-('503', 320, 4, 4, 1),
-('504', 330, 4, 4, 1);
+INSERT INTO room (room_number, price_per_night, capacity, room_type_id, room_status_id,active) VALUES
+('101', 50, 1, 1, 1,true),
+('102', 60, 1, 1, 1,true),
+('103', 80, 2, 2, 1,true),
+('104', 90, 2, 2, 2,true),
+('201', 120, 3, 3, 1,true),
+('202', 130, 3, 3, 3,true),
+('203', 140, 3, 3, 1,true),
+('204', 150, 3, 3, 4,true),
+('301', 200, 4, 4, 1,true),
+('302', 210, 4, 4, 1,true),
+('303', 220, 4, 4, 2,true),
+('304', 230, 4, 4, 3,true),
+('401', 250, 2, 2, 1,true),
+('402', 260, 2, 2, 4,true),
+('403', 270, 1, 1, 1,true),
+('404', 280, 1, 1, 3,true),
+('501', 300, 3, 3, 1,true),
+('502', 310, 3, 3, 2,true),
+('503', 320, 4, 4, 1,true),
+('504', 330, 4, 4, 1,true);
 
 
 INSERT INTO reservationstatus (name, description) VALUES
@@ -53,48 +54,50 @@ INSERT INTO reservationstatus (name, description) VALUES
 ('Confirmada', 'Reserva confirmada'),
 ('Cancelada', 'Reserva cancelada'),
 ('Completada', 'Reserva completada exitosamente');
-INSERT INTO client (first_name, last_name, phone, email, number_identification) VALUES
-('Juan', 'Pérez', '555-0001', 'juan.perez1@email.com', 'ID001'),
-('Ana', 'Gómez', '555-0002', 'ana.gomez2@email.com', 'ID002'),
-('Luis', 'Martínez', '555-0003', 'luis.martinez3@email.com', 'ID003'),
-('María', 'López', '555-0004', 'maria.lopez4@email.com', 'ID004'),
-('Carlos', 'Díaz', '555-0005', 'carlos.diaz5@email.com', 'ID005'),
-('Laura', 'Fernández', '555-0006', 'laura.fernandez6@email.com', 'ID006'),
-('Pedro', 'Ramírez', '555-0007', 'pedro.ramirez7@email.com', 'ID007'),
-('Lucía', 'Torres', '555-0008', 'lucia.torres8@email.com', 'ID008'),
-('Andrés', 'Flores', '555-0009', 'andres.flores9@email.com', 'ID009'),
-('Sofía', 'Cruz', '555-0010', 'sofia.cruz10@email.com', 'ID010'),
-('Miguel', 'Ruiz', '555-0011', 'miguel.ruiz11@email.com', 'ID011'),
-('Valentina', 'Morales', '555-0012', 'valentina.morales12@email.com', 'ID012'),
-('Ricardo', 'Sánchez', '555-0013', 'ricardo.sanchez13@email.com', 'ID013'),
-('Daniela', 'Ortega', '555-0014', 'daniela.ortega14@email.com', 'ID014'),
-('Javier', 'Castro', '555-0015', 'javier.castro15@email.com', 'ID015'),
-('Camila', 'Silva', '555-0016', 'camila.silva16@email.com', 'ID016'),
-('Fernando', 'Vargas', '555-0017', 'fernando.vargas17@email.com', 'ID017'),
-('Isabella', 'Ríos', '555-0018', 'isabella.rios18@email.com', 'ID018'),
-('Pablo', 'Méndez', '555-0019', 'pablo.mendez19@email.com', 'ID019'),
-('Sara', 'Navarro', '555-0020', 'sara.navarro20@email.com', 'ID020'),
-('Alberto', 'Peña', '555-0021', 'alberto.pena21@email.com', 'ID021'),
-('Julia', 'Campos', '555-0022', 'julia.campos22@email.com', 'ID022'),
-('Diego', 'Luna', '555-0023', 'diego.luna23@email.com', 'ID023'),
-('Marta', 'Herrera', '555-0024', 'marta.herrera24@email.com', 'ID024'),
-('Héctor', 'Aguilar', '555-0025', 'hector.aguilar25@email.com', 'ID025'),
-('Victoria', 'Salazar', '555-0026', 'victoria.salazar26@email.com', 'ID026'),
-('Esteban', 'Medina', '555-0027', 'esteban.medina27@email.com', 'ID027'),
-('Paula', 'Vega', '555-0028', 'paula.vega28@email.com', 'ID028'),
-('Santiago', 'Paredes', '555-0029', 'santiago.paredes29@email.com', 'ID029'),
-('Daniel', 'Soto', '555-0030', 'daniel.soto30@email.com', 'ID030'),
-('Gabriela', 'Cordero', '555-0031', 'gabriela.cordero31@email.com', 'ID031'),
-('José', 'Beltrán', '555-0032', 'jose.beltran32@email.com', 'ID032'),
-('Andrea', 'Carrillo', '555-0033', 'andrea.carrillo33@email.com', 'ID033'),
-('Francisco', 'Mora', '555-0034', 'francisco.mora34@email.com', 'ID034'),
-('Natalia', 'Acosta', '555-0035', 'natalia.acosta35@email.com', 'ID035'),
-('Roberto', 'Escobar', '555-0036', 'roberto.escobar36@email.com', 'ID036'),
-('Alejandra', 'Villarreal', '555-0037', 'alejandra.villarreal37@email.com', 'ID037'),
-('Óscar', 'Ramos', '555-0038', 'oscar.ramos38@email.com', 'ID038'),
-('Patricia', 'Miranda', '555-0039', 'patricia.miranda39@email.com', 'ID039'),
-('Ernesto', 'Montoya', '555-0040', 'ernesto.montoya40@email.com', 'ID040');
-INSERT INTO reservation (user_id, reservation_status_id, client_id, room_id, check_in_date, check_in_out, note, total) VALUES
+
+INSERT INTO client (first_name, last_name, phone, email, number_identification,active) VALUES
+('Juan', 'Pérez', '555-0001', 'juan.perez1@email.com', 'ID001',true),
+('Ana', 'Gómez', '555-0002', 'ana.gomez2@email.com', 'ID002',true),
+('Luis', 'Martínez', '555-0003', 'luis.martinez3@email.com', 'ID003',true),
+('María', 'López', '555-0004', 'maria.lopez4@email.com', 'ID004',true),
+('Carlos', 'Díaz', '555-0005', 'carlos.diaz5@email.com', 'ID005',true),
+('Laura', 'Fernández', '555-0006', 'laura.fernandez6@email.com', 'ID006',true),
+('Pedro', 'Ramírez', '555-0007', 'pedro.ramirez7@email.com', 'ID007',true),
+('Lucía', 'Torres', '555-0008', 'lucia.torres8@email.com', 'ID008',true),
+('Andrés', 'Flores', '555-0009', 'andres.flores9@email.com', 'ID009',true),
+('Sofía', 'Cruz', '555-0010', 'sofia.cruz10@email.com', 'ID010',true),
+('Miguel', 'Ruiz', '555-0011', 'miguel.ruiz11@email.com', 'ID011',true),
+('Valentina', 'Morales', '555-0012', 'valentina.morales12@email.com', 'ID012',true),
+('Ricardo', 'Sánchez', '555-0013', 'ricardo.sanchez13@email.com', 'ID013',true),
+('Daniela', 'Ortega', '555-0014', 'daniela.ortega14@email.com', 'ID014',true),
+('Javier', 'Castro', '555-0015', 'javier.castro15@email.com', 'ID015',true),
+('Camila', 'Silva', '555-0016', 'camila.silva16@email.com', 'ID016',true),
+('Fernando', 'Vargas', '555-0017', 'fernando.vargas17@email.com', 'ID017',true),
+('Isabella', 'Ríos', '555-0018', 'isabella.rios18@email.com', 'ID018',true),
+('Pablo', 'Méndez', '555-0019', 'pablo.mendez19@email.com', 'ID019',true),
+('Sara', 'Navarro', '555-0020', 'sara.navarro20@email.com', 'ID020',true),
+('Alberto', 'Peña', '555-0021', 'alberto.pena21@email.com', 'ID021',true),
+('Julia', 'Campos', '555-0022', 'julia.campos22@email.com', 'ID022',true),
+('Diego', 'Luna', '555-0023', 'diego.luna23@email.com', 'ID023',true),
+('Marta', 'Herrera', '555-0024', 'marta.herrera24@email.com', 'ID024',true),
+('Héctor', 'Aguilar', '555-0025', 'hector.aguilar25@email.com', 'ID025',true),
+('Victoria', 'Salazar', '555-0026', 'victoria.salazar26@email.com', 'ID026',true),
+('Esteban', 'Medina', '555-0027', 'esteban.medina27@email.com', 'ID027',true),
+('Paula', 'Vega', '555-0028', 'paula.vega28@email.com', 'ID028',true),
+('Santiago', 'Paredes', '555-0029', 'santiago.paredes29@email.com', 'ID029',true),
+('Daniel', 'Soto', '555-0030', 'daniel.soto30@email.com', 'ID030',true),
+('Gabriela', 'Cordero', '555-0031', 'gabriela.cordero31@email.com', 'ID031',true),
+('José', 'Beltrán', '555-0032', 'jose.beltran32@email.com', 'ID032',true),
+('Andrea', 'Carrillo', '555-0033', 'andrea.carrillo33@email.com', 'ID033',true),
+('Francisco', 'Mora', '555-0034', 'francisco.mora34@email.com', 'ID034',true),
+('Natalia', 'Acosta', '555-0035', 'natalia.acosta35@email.com', 'ID035',true),
+('Roberto', 'Escobar', '555-0036', 'roberto.escobar36@email.com', 'ID036',true),
+('Alejandra', 'Villarreal', '555-0037', 'alejandra.villarreal37@email.com', 'ID037',true),
+('Óscar', 'Ramos', '555-0038', 'oscar.ramos38@email.com', 'ID038',true),
+('Patricia', 'Miranda', '555-0039', 'patricia.miranda39@email.com', 'ID039',true),
+('Ernesto', 'Montoya', '555-0040', 'ernesto.montoya40@email.com', 'ID040',true);
+
+INSERT INTO reservation (user_id, reservation_status_id, client_id, room_id, check_in_date, check_out_date, note, total) VALUES
 (1, 2, 1, 1, '2025-05-01', '2025-05-05', 'Reserva de prueba 1', 200),
 (2, 1, 2, 2, '2025-05-02', '2025-05-06', 'Reserva de prueba 2', 240),
 (3, 2, 3, 3, '2025-05-03', '2025-05-04', 'Reserva de prueba 3', 80),
