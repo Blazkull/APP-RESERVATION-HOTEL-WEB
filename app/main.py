@@ -3,11 +3,17 @@ from fastapi.responses import HTMLResponse
 import uvicorn
 from fastapi import FastAPI, Request
 from core.database import create_db_and_tables
-from routers import login, usertypes, users, clients, roomtypes, roomstatus, room, reservations, reservation_statues
-
+from routers import login, usertypes, users, clients, roomtypes, roomstatus, room, reservations, reservation_statues,dashboard
 from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
 
+from fastapi.staticfiles import StaticFiles
+
+
 app = FastAPI()
+
+
+# montar carpeta 'static' para servir archivos como PDFs, imágenes, etc.
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.on_event("startup")
@@ -30,6 +36,7 @@ app.include_router(room.router)
 app.include_router(clients.router)
 app.include_router(reservation_statues.router)
 app.include_router(reservations.router)
+app.include_router(dashboard.router)
 
 
 
