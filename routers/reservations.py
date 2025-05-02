@@ -16,7 +16,7 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
     try:
         room = session.exec(select(Room).where(Room.id == reservation.room_id)).first()
         if room:
-            duration = reservation.check_in_out - reservation.check_in_date
+            duration = reservation.check_out_date - reservation.check_in_date
             total = room.price_per_night * Decimal(duration.days)
             return total
         return Decimal(0.00)
@@ -38,7 +38,7 @@ def create_reservation(reservation_create: ReservationCreate, session: SessionDe
         room = session.get(Room, reservation_create.room_id)
         if not room:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Room not found")
-        duration = reservation_create.check_in_out - reservation_create.check_in_date
+        duration = reservation_create.check_out_date - reservation_create.check_in_date
         total = room.price_per_night * Decimal(duration.days)
         db_reservation = Reservation(
             user_id=reservation_create.user_id,
@@ -46,7 +46,7 @@ def create_reservation(reservation_create: ReservationCreate, session: SessionDe
             client_id=reservation_create.client_id,
             room_id=reservation_create.room_id,
             check_in_date=reservation_create.check_in_date,
-            check_in_out=reservation_create.check_in_out,
+            check_out_date=reservation_create.check_out_date,
             note=reservation_create.note,
             total=total
         )

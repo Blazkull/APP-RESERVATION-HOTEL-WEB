@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from models.user import User, UserCreate, UserUpdate, UserBase
+from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase
 from core.database import SessionDep
 
 router = APIRouter()
@@ -48,10 +48,17 @@ def create_user(user_data: UserCreate,session: SessionDep):
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
+        #validador de email
         existing_email=session.exec(select(User).where(User.email == user.email)).first()
         if existing_email:
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered" 
+            )
+        #validador de email
+        existing_username=session.exec(select(User).where(User.username == user.username)).first()
+        if existing_username:
+            raise HTTPException(
+               status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
         session.add(user)#insertamos datos
         session.commit()#conectamos la bd
@@ -88,7 +95,7 @@ def delete_user(user_id: int, session: SessionDep):
             )
         session.delete(user_db)
         session.commit()
-        return {"detail": "ok"}
+        return {"detail": "user deleted succesfully"}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -138,6 +145,31 @@ def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
             detail=f"An error occurred while updating user: {str(e)}",
         )
 
-    
 
-    
+#actualizar la contraseña
+
+@router.patch("/api/user/{user_id}/password", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"])
+def update_user_password(user_id: int, password_update: PasswordUpdate, session: SessionDep):
+    try:
+        user_db = session.get(User, user_id)
+        if not user_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exist"
+            )
+
+        if password_update.password == user_db.password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password"
+            )
+
+        user_db.password = password_update.password  # In a real application, you would hash the password before saving
+        session.add(user_db)
+        session.commit()
+        return {"message": f"User '{user_db.username}' has successfully updated their password"}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while updating password: {str(e)}",
+        )  
