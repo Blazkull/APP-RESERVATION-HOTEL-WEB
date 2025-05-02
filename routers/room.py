@@ -111,7 +111,7 @@ def update_room( room_id: int, room_data: RoomUpdate, session: SessionDep):
                 status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
             )#status.http y el codigo y detail es para el mensaje que retorna
         room_data_dict=room_data.model_dump(exclude_unset=True)
-        if "room_number" in room_data_dict and room_data_dict["room_number"] != room_db.name:
+        if "room_number" in room_data_dict and room_data_dict["room_number"] != room_db.room_number:
                 existing_usertype = session.exec(select(Room).where(Room.room_db == room_data_dict["room_db"])).first()
                 if existing_usertype and existing_usertype.id != room_id:
                     raise HTTPException(
