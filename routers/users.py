@@ -84,7 +84,7 @@ def create_user(user_data: UserCreate,session: SessionDep):
 
 
 # obtener User por id para eliminar
-@router.delete("/api/user/{user_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["USER"])
+@router.delete("/api/user/{user_id}",status_code=status.HTTP_200_OK, tags=["USER"])
 def delete_user(user_id: int, session: SessionDep):
 
     try:
@@ -144,6 +144,8 @@ def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred while updating user: {str(e)}",
         )
+
+
 
 
 #actualizar la contraseña

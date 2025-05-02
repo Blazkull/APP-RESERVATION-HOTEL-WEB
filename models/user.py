@@ -12,7 +12,7 @@ class User(UserBase, table=True):
     __tablename__ = "user"  # Nombre de tabla
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    
+    active:bool =Field(default=True)
     
 
     reservations: List["Reservation"] = Relationship(back_populates="user")
@@ -28,12 +28,13 @@ class UserCreate(UserBase):
 class UserUpdate(SQLModel):
     username: Optional[str] = Field(default=None, max_length=30)
     email: Optional[EmailStr] = None
+    active: Optional[bool] =Field(default=True)
 
 class UserRead(UserBase):
     id: int
 
 
-class Login(SQLModel):
+class Login(UserBase):
    username: str = Field(max_length=30)
    password: str = Field(max_length=100)
 

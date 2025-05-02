@@ -87,7 +87,7 @@ def create_client(client_data: ClientCreate, session: SessionDep):
 
 
 # obtener Client por id para eliminar
-@router.delete("/api/client/{client_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["CLIENT"])
+@router.delete("/api/client/{client_id}", status_code=status.HTTP_200_OK, tags=["CLIENT"])
 def delete_client(client_id: int, session: SessionDep):
 
     try:

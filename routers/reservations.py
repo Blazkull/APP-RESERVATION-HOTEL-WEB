@@ -113,7 +113,7 @@ def read_all_reservations(
             detail=f"Error reading all reservations: {str(e)}"
         )
 
-# PUT para actualizar una reserva existente (usando PATCH semánticamente más correcto para actualizaciones parciales)
+# PATCH para actualizar una reserva
 @router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"])
 def update_reservation(reservation_id: int, reservation_update: ReservationUpdate, session: SessionDep):
     try:
@@ -146,7 +146,7 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
         )
 
 # DELETE para eliminar una reserva
-@router.delete("/api/reservations/{reservation_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["RESERVATION"])
+@router.delete("/api/reservations/{reservation_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION"])
 def delete_reservation(reservation_id: int, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)

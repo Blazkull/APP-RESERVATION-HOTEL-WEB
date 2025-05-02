@@ -71,7 +71,7 @@ def create_reservation_status(reservation_status_data: ReservationStatusCreate, 
 
 
 # obtener reservation_status por id para eliminar
-@router.delete("/api/reservationstatus/{reservationstatus_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["RESERVATION STATUS"])
+@router.delete("/api/reservationstatus/{reservationstatus_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION STATUS"])
 def delete_reservation_status(reservationstatus_id: int, session: SessionDep):
     try:
         reservationstatus_db = session.get(ReservationStatus, reservationstatus_id)

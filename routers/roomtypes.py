@@ -65,7 +65,7 @@ def create_roomtype(room_types_data: RoomTypeCreate,session: SessionDep):
 
 
 # obtener room_types por id para eliminar
-@router.delete("/api/roomtypes/{roomtype_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM TYPES"])
+@router.delete("/api/roomtypes/{roomtype_id}",status_code=status.HTTP_200_OK, tags=["ROOM TYPES"])
 def delete_roomtype(roomtype_id: int, session: SessionDep):
     
     try:
@@ -86,13 +86,6 @@ def delete_roomtype(roomtype_id: int, session: SessionDep):
 # obtener tipo de habitacion por id para actualizar
 @router.patch("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"])
 def update_roomtype( roomtype_id: int, roomtype_data: RoomTypeUpdate, session: SessionDep):
-   
-    
-
-    # esto evita que se envien datos vacios a la base de datos
-    roomtype_db.sqlmodel_update(roomtype_data_dict)
-    
-
 
     try:
             roomtype_db = session.get(RoomType, roomtype_id)

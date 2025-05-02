@@ -19,6 +19,7 @@ class Room(RoomBase, table=True):
     __tablename__ = "room"  # Nombre explícito de la tabla
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    active:bool =Field(default=True)
 
     reservations: List["Reservation"] = Relationship(back_populates="room")
     room_type: Optional["RoomType"] = Relationship(back_populates="rooms") # name update

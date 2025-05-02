@@ -21,15 +21,18 @@ def read_root():
 
 
 # Inclusión de rutas
-app.include_router(users.router)
 app.include_router(usertypes.router)
-app.include_router(clients.router)
+app.include_router(users.router)
+app.include_router(login.router) 
 app.include_router(roomtypes.router)
 app.include_router(roomstatus.router)
 app.include_router(room.router)
-app.include_router(reservations.router)
+app.include_router(clients.router)
 app.include_router(reservation_statues.router)
-app.include_router(login.router) 
+app.include_router(reservations.router)
+
+
+
 
 
 # Configuración de CORS

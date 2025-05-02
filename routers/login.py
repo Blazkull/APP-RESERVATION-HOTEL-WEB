@@ -2,11 +2,11 @@ from fastapi import APIRouter, status, HTTPException
 from sqlmodel import select
 from core.database import SessionDep
 from fastapi.responses import JSONResponse
-from models.user import User
+from models.user import User, UserLogin
 
 router = APIRouter()
 
-@router.post("/api/login", response_model=User, tags=["AUTH"])
+@router.post("/api/login", response_model=UserLogin, tags=["AUTH"])
 def login(login_data: User, session: SessionDep):
     try:
         user_db = session.exec(select(User).where(User.username == login_data.username)).first()

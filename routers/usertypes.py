@@ -72,7 +72,7 @@ def create_user(user_type_data: UserTypeCreate,session: SessionDep):
 
 
 # obtener user_types por id para eliminar
-@router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_204_NO_CONTENT, tags=["USER TYPES"])
+@router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_200_OK, tags=["USER TYPES"])
 def delete_usertype(usertype_id: int, session: SessionDep):
 
     try:
