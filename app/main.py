@@ -6,11 +6,8 @@ from core.database import create_db_and_tables
 from routers import login, usertypes, users, clients, roomtypes, roomstatus, room, reservations, reservation_statues
 
 from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
-
-templates = Jinja2Templates(directory="templates")
 
 
 @app.on_event("startup")
@@ -21,10 +18,6 @@ def startup():
 def read_root():
     return {"message": "API en línea en Render"}
 
-
-@app.get("/login", response_class=HTMLResponse)
-def show_login_form(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
 
 
 # Inclusión de rutas
