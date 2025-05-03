@@ -149,13 +149,13 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 ![image](https://github.com/user-attachments/assets/9205a754-11ce-44b1-a160-49c1e5c7fbc2)
 
 # Estructura de la API de Reserva de Hotel
-- `app/`: Contiene la lógica principal de la aplicación.
-- `main.py`: Punto de entrada principal de la aplicación FastAPI.
-- `core/`: Funcionalidades centrales y configuraciones.
+- `📂 app/`: Contiene la lógica principal de la aplicación.
+    - `main.py`: Punto de entrada principal de la aplicación FastAPI.
+- `📂 core/`: Funcionalidades centrales y configuraciones.
   - `config.py`: Archivo para la configuración de la aplicación (bases de datos, etc.).
   - `database.py`: Archivo para la configuración y conexión a la base de datos.
-- `local/`: (Podría contener archivos específicos del entorno local, aunque está vacío aquí).
-- `models/`: Definiciones de los modelos de datos (tablas de la base de datos).
+- `📂 local/`: (Podría contener archivos específicos del entorno local, aunque está vacío aquí).
+- `📂 models/`: Definiciones de los modelos de datos (tablas de la base de datos).
   - `client.py`: Modelo para la tabla de clientes.
   - `reservation_status.py`: Modelo para la tabla de estados de reserva.
   - `reservation.py`: Modelo para la tabla de reservas.
@@ -164,7 +164,7 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
   - `room.py`: Modelo para la tabla de habitaciones.
   - `user_type.py`: Modelo para la tabla de tipos de usuario.
   - `user.py`: Modelo para la tabla de usuarios del sistema.
-- `routers/`: Define las rutas (endpoints) de la API y su lógica.
+- `📂 routers/`: Define las rutas (endpoints) de la API y su lógica.
   - `__init__.py`: Archivo necesario para que el directorio sea un paquete de Python.
   - `clients.py`: Rutas para las operaciones relacionadas con los clientes (crear, leer, actualizar, eliminar).
   - `dashboard.py`: Rutas para funcionalidades del panel de control (estadísticas, información general).
@@ -176,7 +176,7 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
   - `roomtypes.py`: Rutas para gestionar los tipos de habitación.
   - `users.py`: Rutas para las operaciones relacionadas con los usuarios (crear, leer, actualizar, eliminar).
   - `usertypes.py`: Rutas para gestionar los tipos de usuario.
-- `static/`: (Generalmente contiene archivos estáticos como CSS, JavaScript, imágenes, aunque está vacío aquí).
+- `📂 static/`: (Generalmente contiene archivos estáticos como CSS, JavaScript, imágenes, aunque está vacío aquí).
 - `.env`: Archivo para almacenar variables de entorno sensibles (claves de API, configuración de base de datos).
 - `.gitattributes`: Archivo para definir atributos específicos de la ruta para Git.
 - `.gitignore`: Archivo que especifica los archivos y directorios que Git debe ignorar.
