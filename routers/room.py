@@ -145,11 +145,11 @@ def update_room( room_id: int, room_data: RoomUpdate, session: SessionDep):
                 status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
             )#status.http y el codigo y detail es para el mensaje que retorna
         room_data_dict=room_data.model_dump(exclude_unset=True)
-        if "room_number" in room_data_dict and room_data_dict["room_number"] != room_db.name:
-                existing_usertype = session.exec(select(Room).where(Room.room_db == room_data_dict["room_db"])).first()
-                if existing_usertype and existing_usertype.id != room_id:
+        if "room_number" in room_data_dict and room_data_dict["room_number"] != room_db.room_number:
+                existing_room = session.exec(select(Room).where(Room.room_number == room_data_dict["room_number"])).first()
+                if existing_room and existing_room.id != room_id:
                     raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST, detail="User already registered"
+                        status_code=status.HTTP_400_BAD_REQUEST, detail="Room already registered"
                     )
         room_db.sqlmodel_update(room_data_dict)
         session.add(room_db)

@@ -40,7 +40,7 @@ def get_dashboard_data(
 
     # Promedio de días reservados
     promedio_dias = session.query(
-        func.avg(func.datediff(Reservation.check_in_out, Reservation.check_in_date))
+        func.avg(func.datediff(Reservation.check_out_date, Reservation.check_in_date))
     )\
         .filter(extract('month', Reservation.check_in_date) == month)\
         .filter(extract('year', Reservation.check_in_date) == year)\
