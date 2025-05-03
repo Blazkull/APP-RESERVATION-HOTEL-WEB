@@ -144,54 +144,53 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 Consulta toda la documentación en `/docs` para explorar todos los recursos disponibles.
 
 
-## 📂 ESTRUCTURA DEL PROYECTO
+## 📂 Estructura del Proyecto
 
-📁 API HOTEL RESERVATION
 ├── app/
-│   ├── __pycache__/      # Directorio para archivos bytecode de Python (generados automáticamente).
-│   └── main.py           # Archivo principal de la aplicación FastAPI. Punto de entrada. Define la instancia de la aplicación y puede contener la configuración inicial.
+│   ├── pycache/
+│   └── main.py        # Archivo principal de la aplicación FastAPI. Punto de entrada.
 │
-├── core/             # Contiene la lógica central de la aplicación.
-│   ├── __pycache__/  # Directorio para archivos bytecode de Python (generados automáticamente).
-│   ├── config.py     #  Configuración de la aplicación (e.g., ajustes de la base de datos, variables de entorno, etc.).  Puede cargar variables desde .env o definir valores por defecto.
-│   └── database.py   #  Código para la conexión y configuración de la base de datos (SQLAlchemy). Define la sesión de la base de datos, el motor, etc.
+├── core/
+│   ├── pycache/
+│   ├── config.py      # Configuración de la aplicación (base de datos, entorno, etc.).
+│   └── database.py    # Conexión y configuración de la base de datos (SQLAlchemy).
 │
-├── local/             #  Este directorio parece estar fuera de la estructura lógica de la app.  Por el nombre, podría ser un directorio para archivos locales/temporales, pero su ubicación es inusual.  **Es posible que no pertenezca a la estructura principal de la aplicación.**
+├── local/             # Posible directorio para archivos locales/temporales (ubicación inusual).
 │
-├── models/           # Define los modelos de la base de datos utilizando SQLAlchemy. Cada archivo representa una tabla.
-│   ├── __pycache__/  # Directorio para archivos bytecode de Python (generados automáticamente).
-│   ├── client.py         # Modelo para la tabla de clientes.
-│   ├── reservation_status.py # Modelo para la tabla de estados de reserva (e.g., "Pendiente", "Confirmada", "Cancelada").
-│   ├── reservation.py    # Modelo para la tabla de reservas.
-│   ├── room_status.py    # Modelo para la tabla de estados de habitación (e.g., "Disponible", "Ocupada", "En Mantenimiento").
-│   ├── room_type.py      # Modelo para la tabla de tipos de habitación (e.g., "Individual", "Doble", "Suite").
-│   ├── room.py           # Modelo para la tabla de habitaciones.
-│   ├── user_type.py      # Modelo para la tabla de tipos de usuario (e.g., "Administrador", "Recepcionista").
-│   ├── user.py           # Modelo para la tabla de usuarios.
+├── models/
+│   ├── pycache/
+│   ├── client.py      # Modelo para la tabla de clientes.
+│   ├── reservation_status.py # Modelo para la tabla de estados de reserva.
+│   ├── reservation.py # Modelo para la tabla de reservas.
+│   ├── room_status.py # Modelo para la tabla de estados de habitación.
+│   ├── room_type.py   # Modelo para la tabla de tipos de habitación.
+│   ├── room.py        # Modelo para la tabla de habitaciones.
+│   ├── user_type.py   # Modelo para la tabla de tipos de usuario.
+│   └── user.py        # Modelo para la tabla de usuarios.
 │
-├── routers/          # Contiene los routers de FastAPI.  Cada router define los endpoints (APIs) para una funcionalidad específica.
-│   ├── __pycache__/  # Directorio para archivos bytecode de Python (generados automáticamente).
-│   ├── __init__.py     # Archivo que permite tratar el directorio como un paquete de Python.
-│   ├── clients.py        # Router para las operaciones relacionadas con los clientes (crear, leer, actualizar, eliminar).  **[M]** indica que fue modificado recientemente.
-│   ├── dashboard.py      # Router para la funcionalidad del dashboard (puede contener rutas para estadísticas, reportes, etc.).
-│   ├── login.py          # Router para la autenticación de usuarios (login).
-│   ├── reservation_statues.py # Router para las operaciones relacionadas con los estados de reserva.
-│   ├── reservations.py   # Router para las operaciones relacionadas con las reservas.
-│   ├── room.py           # Router para las operaciones relacionadas con las habitaciones.
-│   ├── roomstatus.py     # Router para las operaciones relacionadas con los estados de habitación.
-│   ├── roomtypes.py      # Router para las operaciones relacionadas con los tipos de habitación.
-│   ├── users.py          # Router para las operaciones relacionadas con los usuarios.
-│   ├── usertypes.py      # Router para las operaciones relacionadas con los tipos de usuario.
+├── routers/
+│   ├── pycache/
+│   ├── init.py
+│   ├── clients.py     # Rutas para operaciones de clientes.
+│   ├── dashboard.py   # Rutas para la funcionalidad del dashboard.
+│   ├── login.py       # Ruta para la autenticación de usuarios.
+│   ├── reservation_statues.py # Rutas para estados de reserva.
+│   ├── reservations.py# Rutas para operaciones de reservas.
+│   ├── room.py        # Rutas para operaciones de habitaciones.
+│   ├── roomstatus.py  # Rutas para estados de habitación.
+│   ├── roomtypes.py   # Rutas para tipos de habitación.
+│   ├── users.py       # Rutas para operaciones de usuarios.
+│   └── usertypes.py   # Rutas para tipos de usuario.
 │
-├── static/           # Directorio para archivos estáticos (e.g., CSS, JavaScript, imágenes).  Aunque no se ven archivos dentro, se asume su propósito.
+├── static/            # Directorio para archivos estáticos (CSS, JS, imágenes).
 │
-├── env/              #  Este directorio también parece estar fuera de la estructura lógica de la app. Por convención, las variables de entorno se guardan en un archivo `.env` en la raíz del proyecto, no en un directorio.  **Es posible que no pertenezca a la estructura principal de la aplicación.**
-├── .gitattributes   # Archivo para definir atributos de los archivos en el repositorio Git (e.g., manejo de finales de línea).
-├── .gitignore       # Archivo para especificar los archivos y directorios que Git debe ignorar (e.g., archivos temporales, entornos virtuales).
-├── LICENSE          # Archivo que contiene la licencia del proyecto.
-├── README.md        # Archivo Markdown que describe el proyecto (como el que me proporcionaste).
-├── requirements.txt # Archivo que lista las dependencias de Python del proyecto.  **[M]** indica que fue modificado recientemente.
-└── script_create_db_r... # Script SQL para crear la base de datos y, posiblemente, insertar datos iniciales. **[M]** indica que fue modificado recientemente.
+├── env/               # Posible directorio para configuración de entorno (ubicación inusual).
+├── .gitattributes
+├── .gitignore
+├── LICENSE
+├── README.md
+├── requirements.txt
+└── script_create_db_r...
 
 ## 👥 COLABORADORES
 
