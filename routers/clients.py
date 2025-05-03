@@ -131,7 +131,7 @@ def update_client_status(client_id: int, status_update: ClientStatus, session: S
         session.commit()
         session.refresh(client_db)
 
-        return {"message": f"Client  '{client_db.first_name +" "+ client_db.last_name}' has successfully updated their status to: {client_db.active}"}
+        return {"message": f"Client  '{client_db.first_name} {client_db.last_name}' has successfully updated their status to: {client_db.active}"}
     except HTTPException as http_exc:
         raise http_exc
     except Exception as e:

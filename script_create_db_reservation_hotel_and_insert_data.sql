@@ -7,12 +7,11 @@ INSERT INTO usertype (name, description) VALUES
 ('Recepcionista', 'Empleado de recepción'),
 ('Gerente', 'Encargado general del hotel');
 
-select *from user;
-INSERT INTO user (username, email, password, user_type_id,active) VALUES
-('admin1', 'admin1@hotel.com', 'hashed_password1', 1,true),
-('recepcion1', 'recepcion1@hotel.com', 'hashed_password2', 2,true),
-('recepcion2', 'recepcion2@hotel.com', 'hashed_password3', 2,true),
-('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3,true);
+INSERT INTO reservationstatus (name, description) VALUES
+('Pendiente', 'Reserva pendiente de confirmación'),
+('Confirmada', 'Reserva confirmada'),
+('Cancelada', 'Reserva cancelada'),
+('Completada', 'Reserva completada exitosamente');
 
 INSERT INTO roomstatus (name, description) VALUES
 ('Disponible', 'Habitación disponible'),
@@ -46,14 +45,17 @@ INSERT INTO room (room_number, price_per_night, capacity, room_type_id, room_sta
 ('501', 300, 3, 3, 1,true),
 ('502', 310, 3, 3, 2,true),
 ('503', 320, 4, 4, 1,true),
-('504', 330, 4, 4, 1,true);
+('504', 330, 4, 4, 1,TRUE);
 
 
-INSERT INTO reservationstatus (name, description) VALUES
-('Pendiente', 'Reserva pendiente de confirmación'),
-('Confirmada', 'Reserva confirmada'),
-('Cancelada', 'Reserva cancelada'),
-('Completada', 'Reserva completada exitosamente');
+INSERT INTO user (username, email, password, user_type_id,active) VALUES
+('admin1', 'admin1@hotel.com', 'hashed_password1', 1,true),
+('recepcion1', 'recepcion1@hotel.com', 'hashed_password2', 2,true),
+('recepcion2', 'recepcion2@hotel.com', 'hashed_password3', 2,true),
+('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3,true);
+
+
+
 
 INSERT INTO client (first_name, last_name, phone, email, number_identification,active) VALUES
 ('Juan', 'Pérez', '555-0001', 'juan.perez1@email.com', 'ID001',true),
