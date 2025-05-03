@@ -27,6 +27,7 @@ class Room(RoomBase, table=True):
 
 class RoomCreate(RoomBase):
     pass
+    active:bool =Field(default=True)
 
 class RoomUpdate(SQLModel):
     room_number: Optional[str] = Field(default=None, max_length=30)
@@ -34,6 +35,7 @@ class RoomUpdate(SQLModel):
     capacity: Optional[int] = Field(default=None)
     room_type_id: Optional[int] = Field(default=None, foreign_key="roomtype.id")
     room_status_id: Optional[int] = Field(default=None, foreign_key="roomstatus.id")
-
+    active:bool =Field(default=True)
+    
 class RoomRead(RoomBase):
     id: int

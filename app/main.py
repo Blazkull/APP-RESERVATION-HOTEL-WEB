@@ -49,6 +49,7 @@ origins = [
     "http://localhost:8080",
     "https://mi-dominio.com",
     "https://otro-dominio.net",
+    
     "*",  # Solo para desarrollo
 ]
 

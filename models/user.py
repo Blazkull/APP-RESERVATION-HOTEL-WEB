@@ -24,7 +24,8 @@ class UserLogin(SQLModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=6, max_length=100)
-
+    active:bool =Field(default=True)
+    
 class UserUpdate(SQLModel):
     username: Optional[str] = Field(default=None, max_length=30)
     email: Optional[EmailStr] = None

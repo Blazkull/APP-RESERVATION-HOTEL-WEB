@@ -24,7 +24,8 @@ class ClientBase(SQLModel):
     phone: str = Field(max_length=20,unique=True)
     email: EmailStr = Field(max_length=100,unique=True)
     number_identification: str = Field(max_length=30,unique=True)
-
+    active:bool =Field(default=True)
+    
 class ClientCreate(ClientBase):
     pass
 
