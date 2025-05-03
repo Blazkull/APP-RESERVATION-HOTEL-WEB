@@ -146,52 +146,44 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 
 ## 📂 Estructura del Proyecto
 
-├── app/
-│   ├── pycache/
-│   └── main.py        # Archivo principal de la aplicación FastAPI. Punto de entrada.
-│
-├── core/
-│   ├── pycache/
-│   ├── config.py      # Configuración de la aplicación (base de datos, entorno, etc.).
-│   └── database.py    # Conexión y configuración de la base de datos (SQLAlchemy).
-│
-├── local/             # Posible directorio para archivos locales/temporales (ubicación inusual).
-│
-├── models/
-│   ├── pycache/
-│   ├── client.py      # Modelo para la tabla de clientes.
-│   ├── reservation_status.py # Modelo para la tabla de estados de reserva.
-│   ├── reservation.py # Modelo para la tabla de reservas.
-│   ├── room_status.py # Modelo para la tabla de estados de habitación.
-│   ├── room_type.py   # Modelo para la tabla de tipos de habitación.
-│   ├── room.py        # Modelo para la tabla de habitaciones.
-│   ├── user_type.py   # Modelo para la tabla de tipos de usuario.
-│   └── user.py        # Modelo para la tabla de usuarios.
-│
-├── routers/
-│   ├── pycache/
-│   ├── init.py
-│   ├── clients.py     # Rutas para operaciones de clientes.
-│   ├── dashboard.py   # Rutas para la funcionalidad del dashboard.
-│   ├── login.py       # Ruta para la autenticación de usuarios.
-│   ├── reservation_statues.py # Rutas para estados de reserva.
-│   ├── reservations.py# Rutas para operaciones de reservas.
-│   ├── room.py        # Rutas para operaciones de habitaciones.
-│   ├── roomstatus.py  # Rutas para estados de habitación.
-│   ├── roomtypes.py   # Rutas para tipos de habitación.
-│   ├── users.py       # Rutas para operaciones de usuarios.
-│   └── usertypes.py   # Rutas para tipos de usuario.
-│
-├── static/            # Directorio para archivos estáticos (CSS, JS, imágenes).
-│
-├── env/               # Posible directorio para configuración de entorno (ubicación inusual).
-├── .gitattributes
-├── .gitignore
-├── LICENSE
-├── README.md
-├── requirements.txt
-└── script_create_db_r...
+![image](https://github.com/user-attachments/assets/9205a754-11ce-44b1-a160-49c1e5c7fbc2)
 
+# Estructura de la API de Reserva de Hotel
+- `📂 app/`: Contiene la lógica principal de la aplicación.
+    - `main.py`: Punto de entrada principal de la aplicación FastAPI.
+- `📂 core/`: Funcionalidades centrales y configuraciones.
+  - `config.py`: Archivo para la configuración de la aplicación (bases de datos, etc.).
+  - `database.py`: Archivo para la configuración y conexión a la base de datos.
+- `📂 local/`: (Podría contener archivos específicos del entorno local, aunque está vacío aquí).
+- `📂 models/`: Definiciones de los modelos de datos (tablas de la base de datos).
+  - `client.py`: Modelo para la tabla de clientes.
+  - `reservation_status.py`: Modelo para la tabla de estados de reserva.
+  - `reservation.py`: Modelo para la tabla de reservas.
+  - `room_status.py`: Modelo para la tabla de estados de habitación.
+  - `room_type.py`: Modelo para la tabla de tipos de habitación.
+  - `room.py`: Modelo para la tabla de habitaciones.
+  - `user_type.py`: Modelo para la tabla de tipos de usuario.
+  - `user.py`: Modelo para la tabla de usuarios del sistema.
+- `📂 routers/`: Define las rutas (endpoints) de la API y su lógica.
+  - `__init__.py`: Archivo necesario para que el directorio sea un paquete de Python.
+  - `clients.py`: Rutas para las operaciones relacionadas con los clientes (crear, leer, actualizar, eliminar).
+  - `dashboard.py`: Rutas para funcionalidades del panel de control (estadísticas, información general).
+  - `login.py`: Rutas para la autenticación y generación de tokens de acceso.
+  - `reservation_statuses.py`: Rutas para gestionar los estados de reserva.
+  - `reservations.py`: Rutas para las operaciones relacionadas con las reservas (crear, leer, actualizar, cancelar).
+  - `room.py`: Rutas para las operaciones relacionadas con las habitaciones (listar, detalles).
+  - `roomstatus.py`: Rutas para gestionar los estados de las habitaciones.
+  - `roomtypes.py`: Rutas para gestionar los tipos de habitación.
+  - `users.py`: Rutas para las operaciones relacionadas con los usuarios (crear, leer, actualizar, eliminar).
+  - `usertypes.py`: Rutas para gestionar los tipos de usuario.
+- `📂 static/`: (Generalmente contiene archivos estáticos como CSS, JavaScript, imágenes, aunque está vacío aquí).
+- `.env`: Archivo para almacenar variables de entorno sensibles (claves de API, configuración de base de datos).
+- `.gitattributes`: Archivo para definir atributos específicos de la ruta para Git.
+- `.gitignore`: Archivo que especifica los archivos y directorios que Git debe ignorar.
+- `LICENSE`: Archivo que contiene la licencia bajo la cual se distribuye el proyecto.
+- `README.md`: Archivo de documentación del proyecto, con información sobre cómo ejecutarlo, etc.
+- `requirements.txt`: Lista de las dependencias de Python necesarias para ejecutar el proyecto.
+- `script_create_db_reservation_hotel_and_insert_data.sql`: Script SQL para crear la base de datos y posiblemente insertar datos iniciales.
 ## 👥 COLABORADORES
 
 | Nombre     | Rol               | GitHub                                 |
