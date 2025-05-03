@@ -28,7 +28,7 @@ La API de "APP RESERVATION HOTEL WEB" está diseñada para manejar las operacion
 
 La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y prueba de todos los endpoints disponibles.
 
-Esta API es ideal para proyectos hoteleros que necesitan una base robusta, escalable y fácil de extender.
+## Esta API es ideal para proyectos hoteleros que necesitan una base robusta, escalable y fácil de extender.
 ============================================================
 
 ## 🚀TECNOLOGÍAS UTILIZADAS
