@@ -3,7 +3,8 @@
 API RESTful desarrollada con FastAPI para la gestión de reservas hoteleras. Este proyecto permite administrar habitaciones, clientes, reservas, tipos de habitación y más, a través de endpoints consumibles desde cualquier frontend o cliente HTTP.
 
 ============================================================
-🚀 TECNOLOGÍAS UTILIZADAS
+
+##🚀 TECNOLOGÍAS UTILIZADAS
 
 - Python 3.10+
 - FastAPI
@@ -16,7 +17,8 @@ API RESTful desarrollada con FastAPI para la gestión de reservas hoteleras. Est
 - Swagger UI (Documentación automática)
 
 ============================================================
-📦 REQUISITOS PREVIOS
+
+##📦 REQUISITOS PREVIOS
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
@@ -28,7 +30,8 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 6. **Warp** (opcional, terminal moderna para macOS): https://www.warp.dev/
 
 ============================================================
-🛠️ CONFIGURACIÓN DEL PROYECTO (PASO A PASO)
+
+##🛠️ CONFIGURACIÓN DEL PROYECTO (PASO A PASO)
 
 🔹 Paso 1: Clonar el repositorio
 
@@ -96,7 +99,8 @@ Esto iniciará el servidor en modo desarrollo, escuchando por defecto en:
 📍 `http://127.0.0.1:8000/`
 
 ============================================================
-📘 DOCUMENTACIÓN INTERACTIVA
+
+##📘 DOCUMENTACIÓN INTERACTIVA
 
 Después de levantar el servidor, puedes insertar los datos de prueba desde MySQL Workbench ejecutando la segunda parte del archivo `script_create_db_reservation_hotel_and_insert_data.sql` (la parte que contiene los INSERTs).
 
@@ -106,7 +110,8 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 - Redoc: http://127.0.0.1:8000/redoc
 
 ============================================================
-📤 ENDPOINTS DESTACADOS
+
+##📤 ENDPOINTS DESTACADOS
 
 - GET /rooms/ → Listar habitaciones
 - GET /clients/ → Listar clientes
@@ -118,7 +123,8 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 Consulta toda la documentación en `/docs` para explorar todos los recursos disponibles.
 
 ============================================================
-📂 ESTRUCTURA DEL PROYECTO
+
+##📂 ESTRUCTURA DEL PROYECTO
 
 📁 API HOTEL RESERVATION
 ├── app/
@@ -167,7 +173,8 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 ├── requirements.txt # Archivo que lista las dependencias de Python del proyecto.  **[M]** indica que fue modificado recientemente.
 └── script_create_db_r... # Script SQL para crear la base de datos y, posiblemente, insertar datos iniciales. **[M]** indica que fue modificado recientemente.
 ============================================================
-👥 COLABORADORES
+
+##👥 COLABORADORES
 
 | Nombre     | Rol               | GitHub                                 |
 |------------|------------------ |----------------------------------------|
@@ -176,7 +183,8 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 | Rafael Jimenez| Database Administrator | https://github.com/Tstark601        |
 
 ============================================================
-📌 NOTAS FINALES
+
+##📌 NOTAS FINALES
 
 - Es fundamental mantener el archivo `.env` fuera del repositorio público.
 - Se recomienda usar herramientas como http://127.0.0.1:8000/docs para pruebas manuales.
