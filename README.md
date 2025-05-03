@@ -146,7 +146,8 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 
 ## ⚙ Diagrama entidad relacion base de datos
 
-![digrama](https://github.com/user-attachments/assets/d2746727-1621-4965-886c-829f9ef8d16a)
+
+![digrama](https://github.com/user-attachments/assets/fc9f4fe7-daaf-41de-8937-56db96f438a4)
 
 
 ## 📂 Estructura del Proyecto
