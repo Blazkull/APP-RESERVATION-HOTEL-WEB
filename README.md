@@ -31,7 +31,7 @@ La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y pr
 Esta API es ideal para proyectos hoteleros que necesitan una base robusta, escalable y fácil de extender.
 ============================================================
 
-🚀 ##TECNOLOGÍAS UTILIZADAS
+## 🚀TECNOLOGÍAS UTILIZADAS
 
 - Python 3.10+
 - FastAPI
