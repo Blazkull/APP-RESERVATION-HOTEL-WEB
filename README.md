@@ -1,10 +1,37 @@
-🏨 APP RESERVATION HOTEL WEB
+# 🏨 APP RESERVATION HOTEL WEB
+
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green.svg)](https://fastapi.tiangolo.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-8%2B-blue.svg)](https://www.mysql.com/)
+[![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-ORM-red.svg)](https://www.sqlalchemy.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-DataValidation-lightgrey.svg)](https://pydantic-docs.helpmanual.io/)
+[![Uvicorn](https://img.shields.io/badge/Uvicorn-ASGI-blueviolet.svg)](https://www.uvicorn.org/)
+[![Swagger UI](https://img.shields.io/badge/Swagger-UI-green.svg)](https://swagger.io/tools/swagger-ui/)
+[![Postman](https://img.shields.io/badge/Postman-API%20Client-orange.svg)](https://www.postman.com/)
+[![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-IDE-blue.svg)](https://code.visualstudio.com/)
+[![Warp](https://img.shields.io/badge/Warp-Terminal-black.svg)](https://warp.dev/)
+
+---
 
 API RESTful desarrollada con FastAPI para la gestión de reservas hoteleras. Este proyecto permite administrar habitaciones, clientes, reservas, tipos de habitación y más, a través de endpoints consumibles desde cualquier frontend o cliente HTTP.
 
+##API RESTful - Gestión de Reservas Hoteleras
+
+La API de "APP RESERVATION HOTEL WEB" está diseñada para manejar las operaciones principales de un sistema de reservas hoteleras. Proporciona endpoints seguros y estructurados que permiten a los desarrolladores integrar funcionalidades de backend a cualquier frontend web, móvil o cliente HTTP. 
+
+##Funciones clave:
+- Gestión de habitaciones y sus tipos (individual, doble, suite, etc.).
+- Registro y administración de clientes.
+- Creación, consulta y cancelación de reservas.
+- Control de estados de reserva (pendiente, confirmada, cancelada).
+- Administración de usuarios y roles para el sistema.
+
+La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y prueba de todos los endpoints disponibles.
+
+Esta API es ideal para proyectos hoteleros que necesitan una base robusta, escalable y fácil de extender.
 ============================================================
 
-##🚀 TECNOLOGÍAS UTILIZADAS
+🚀 ##TECNOLOGÍAS UTILIZADAS
 
 - Python 3.10+
 - FastAPI
@@ -18,7 +45,7 @@ API RESTful desarrollada con FastAPI para la gestión de reservas hoteleras. Est
 
 ============================================================
 
-##📦 REQUISITOS PREVIOS
+📦 ##REQUISITOS PREVIOS
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
@@ -31,7 +58,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 ============================================================
 
-##🛠️ CONFIGURACIÓN DEL PROYECTO (PASO A PASO)
+🛠️ ##CONFIGURACIÓN DEL PROYECTO (PASO A PASO)
 
 🔹 Paso 1: Clonar el repositorio
 
@@ -100,7 +127,7 @@ Esto iniciará el servidor en modo desarrollo, escuchando por defecto en:
 
 ============================================================
 
-##📘 DOCUMENTACIÓN INTERACTIVA
+📘 ##DOCUMENTACIÓN INTERACTIVA
 
 Después de levantar el servidor, puedes insertar los datos de prueba desde MySQL Workbench ejecutando la segunda parte del archivo `script_create_db_reservation_hotel_and_insert_data.sql` (la parte que contiene los INSERTs).
 
@@ -111,7 +138,7 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 
 ============================================================
 
-##📤 ENDPOINTS DESTACADOS
+📤 ##ENDPOINTS DESTACADOS
 
 - GET /rooms/ → Listar habitaciones
 - GET /clients/ → Listar clientes
@@ -124,7 +151,7 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 
 ============================================================
 
-##📂 ESTRUCTURA DEL PROYECTO
+📂 ##ESTRUCTURA DEL PROYECTO
 
 📁 API HOTEL RESERVATION
 ├── app/
@@ -174,7 +201,7 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 └── script_create_db_r... # Script SQL para crear la base de datos y, posiblemente, insertar datos iniciales. **[M]** indica que fue modificado recientemente.
 ============================================================
 
-##👥 COLABORADORES
+👥 ##COLABORADORES
 
 | Nombre     | Rol               | GitHub                                 |
 |------------|------------------ |----------------------------------------|
@@ -184,7 +211,7 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 
 ============================================================
 
-##📌 NOTAS FINALES
+📌 ##NOTAS FINALES
 
 - Es fundamental mantener el archivo `.env` fuera del repositorio público.
 - Se recomienda usar herramientas como http://127.0.0.1:8000/docs para pruebas manuales.
