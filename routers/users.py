@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase
+from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase, UserStatus
 from core.database import SessionDep
 
 router = APIRouter()
@@ -81,6 +81,7 @@ def create_user(user_data: UserCreate,session: SessionDep):
 
     
 
+'''
 
 
 # obtener User por id para eliminar
@@ -102,6 +103,9 @@ def delete_user(user_id: int, session: SessionDep):
             detail=f"this list usertype doesn´t: {str(e)}",
         )
 
+
+
+'''
 # obtener tipo de usuario por id para actualizar
 @router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_200_OK, tags=["USER"])
 def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
@@ -146,7 +150,35 @@ def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
         )
 
 
+#actualizar estado de usuario
+@router.patch("/api/user/{user_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"])
+def update_user_status(user_id: int, status_update: UserStatus, session: SessionDep):
+    try:
+        user_db = session.get(User, user_id)
+        if not user_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exist"
+            )
 
+        # Evita actualizar si el estado no ha cambiado
+        if status_update.active == user_db.active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New status is the same as the current one"
+            )
+
+        user_db.active = status_update.active       
+        session.add(user_db)
+        session.commit()
+        session.refresh(user_db)
+
+        return {"message": f"User '{user_db.username}' has successfully updated their status to: {user_db.active}"}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while updating status: {str(e)}",
+        )
 
 #actualizar la contraseña
 
@@ -161,10 +193,10 @@ def update_user_password(user_id: int, password_update: PasswordUpdate, session:
 
         if password_update.password == user_db.password:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password min:8 caracters"
             )
 
-        user_db.password = password_update.password  # In a real application, you would hash the password before saving
+        user_db.password = password_update.password  
         session.add(user_db)
         session.commit()
         return {"message": f"User '{user_db.username}' has successfully updated their password"}

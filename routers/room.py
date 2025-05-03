@@ -3,8 +3,9 @@ from fastapi import APIRouter, Query, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from models.room import Room, RoomCreate, RoomUpdate
+from models.room import Room, RoomCreate, RoomStatusUpdate, RoomUpdate
 from core.database import SessionDep
+from models.room_status import RoomStatus
 
 router = APIRouter()
 
@@ -79,7 +80,7 @@ def create_room(room_data: RoomCreate,session: SessionDep):
             detail=f"An error occurred while creating room: {str(e)}",
         )
 
-
+'''
 # obtener Room por id para eliminar
 @router.delete("/api/room/{room_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM"])
 def delete_room(room_id: int, session: SessionDep):
@@ -99,6 +100,39 @@ def delete_room(room_id: int, session: SessionDep):
             detail=f"An error occurred while deleting room: {str(e)}",
         )
     
+
+'''
+
+#actualizar estado de habitacion
+@router.patch("/api/room/{room_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["ROOM"])
+def update_room_status(room_id: int, status_update: RoomStatusUpdate, session: SessionDep):
+    try:
+        room_db = session.get(Room, room_id)
+        if not room_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exist"
+            )
+
+        # Evita actualizar si el estado no ha cambiado
+        if status_update.active == room_db.active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New status is the same as the current one"
+            )
+
+        room_db.active = status_update.active       
+        session.add(room_db)
+        session.commit()
+        session.refresh(room_db)
+
+        return {"message": f"Room: '{room_db.room_number}' has successfully updated their status to: {room_db.active}"}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while updating status: {str(e)}",
+        )
+
 
 # obtener tipo de room por id para actualizar
 @router.patch("/api/room/{room_id}", response_model=Room, status_code=status.HTTP_200_OK, tags=["ROOM"])

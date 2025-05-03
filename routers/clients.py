@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
-from models.client import Client, ClientCreate, ClientUpdate
+from models.client import Client, ClientCreate, ClientStatus, ClientUpdate
 from core.database import SessionDep
 
 router = APIRouter()
@@ -85,6 +85,7 @@ def create_client(client_data: ClientCreate, session: SessionDep):
 
 
 
+'''
 
 # obtener Client por id para eliminar
 @router.delete("/api/client/{client_id}", status_code=status.HTTP_200_OK, tags=["CLIENT"])
@@ -106,6 +107,39 @@ def delete_client(client_id: int, session: SessionDep):
         )
 
 
+
+'''
+
+#actualizar estado de usuario
+@router.patch("/api/client/{client_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["CLIENT"])
+def update_client_status(client_id: int, status_update: ClientStatus, session: SessionDep):
+    try:
+        client_db = session.get(Client, client_id)
+        if not client_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Client doesn't exist"
+            )
+
+        # Evita actualizar si el estado no ha cambiado
+        if status_update.active == client_db.active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New status is the same as the current one"
+            )
+
+        client_db.active = status_update.active       
+        session.add(client_db)
+        session.commit()
+        session.refresh(client_db)
+
+        return {"message": f"Client  '{client_db.first_name +" "+ client_db.last_name}' has successfully updated their status to: {client_db.active}"}
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred while updating status: {str(e)}",
+        )
+    
 
 # obtener tipo de usuario por id para actualizar
 @router.patch("/api/client/{client_id}", response_model=Client, status_code=status.HTTP_200_OK, tags=["CLIENT"])
