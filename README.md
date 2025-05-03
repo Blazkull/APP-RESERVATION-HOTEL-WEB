@@ -15,11 +15,11 @@
 
 API RESTful desarrollada con FastAPI para la gestión de reservas hoteleras. Este proyecto permite administrar habitaciones, clientes, reservas, tipos de habitación y más, a través de endpoints consumibles desde cualquier frontend o cliente HTTP.
 
-##API RESTful - Gestión de Reservas Hoteleras
+## API RESTful - Gestión de Reservas Hoteleras
 
 La API de "APP RESERVATION HOTEL WEB" está diseñada para manejar las operaciones principales de un sistema de reservas hoteleras. Proporciona endpoints seguros y estructurados que permiten a los desarrolladores integrar funcionalidades de backend a cualquier frontend web, móvil o cliente HTTP. 
 
-##Funciones clave:
+## Funciones clave:
 - Gestión de habitaciones y sus tipos (individual, doble, suite, etc.).
 - Registro y administración de clientes.
 - Creación, consulta y cancelación de reservas.
