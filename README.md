@@ -29,7 +29,6 @@ La API de "APP RESERVATION HOTEL WEB" está diseñada para manejar las operacion
 La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y prueba de todos los endpoints disponibles.
 
 ## Esta API es ideal para proyectos hoteleros que necesitan una base robusta, escalable y fácil de extender.
-============================================================
 
 ## 🚀TECNOLOGÍAS UTILIZADAS
 
@@ -43,8 +42,6 @@ La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y pr
 - Uvicorn (ASGI server)
 - Swagger UI (Documentación automática)
 
-============================================================
-
 ## 📦 REQUISITOS PREVIOS
 
 Antes de comenzar, asegúrate de tener instalado lo siguiente:
@@ -56,7 +53,6 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 5. **GitHub Desktop** (opcional para clonar repos desde interfaz gráfica): https://desktop.github.com/
 6. **Warp** (opcional, terminal moderna para macOS): https://www.warp.dev/
 
-============================================================
 
 ## 🛠️ CONFIGURACIÓN DEL PROYECTO (PASO A PASO)
 
@@ -125,7 +121,6 @@ Ejecuta el siguiente comando desde la raíz del proyecto:
 Esto iniciará el servidor en modo desarrollo, escuchando por defecto en:  
 📍 `http://127.0.0.1:8000/`
 
-============================================================
 
 ## 📘 DOCUMENTACIÓN INTERACTIVA
 
@@ -136,7 +131,6 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 - Swagger UI: http://127.0.0.1:8000/docs
 - Redoc: http://127.0.0.1:8000/redoc
 
-============================================================
 
 ## 📤 ENDPOINTS DESTACADOS
 
@@ -149,7 +143,6 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 
 Consulta toda la documentación en `/docs` para explorar todos los recursos disponibles.
 
-============================================================
 
 ## 📂 ESTRUCTURA DEL PROYECTO
 
@@ -199,7 +192,6 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 ├── README.md        # Archivo Markdown que describe el proyecto (como el que me proporcionaste).
 ├── requirements.txt # Archivo que lista las dependencias de Python del proyecto.  **[M]** indica que fue modificado recientemente.
 └── script_create_db_r... # Script SQL para crear la base de datos y, posiblemente, insertar datos iniciales. **[M]** indica que fue modificado recientemente.
-============================================================
 
 ## 👥 COLABORADORES
 
@@ -209,7 +201,6 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 | Kevin Perez| Frontend Developer| https://github.com/kevinperezroa       |
 | Rafael Jimenez| Database Administrator | https://github.com/Tstark601        |
 
-============================================================
 
 ## 📌 NOTAS FINALES
 
