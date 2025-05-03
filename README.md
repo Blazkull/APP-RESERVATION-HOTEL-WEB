@@ -144,6 +144,11 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 Consulta toda la documentación en `/docs` para explorar todos los recursos disponibles.
 
 
+## ⚙ Diagrama entidad relacion base de datos
+
+![digrama](https://github.com/user-attachments/assets/d2746727-1621-4965-886c-829f9ef8d16a)
+
+
 ## 📂 Estructura del Proyecto
 
 ![image](https://github.com/user-attachments/assets/9205a754-11ce-44b1-a160-49c1e5c7fbc2)
