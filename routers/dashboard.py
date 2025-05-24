@@ -8,6 +8,7 @@ from reportlab.pdfgen import canvas
 import os
 
 from core.database import SessionDep
+from core.security import decode_token
 from models.reservation import Reservation
 from models.client import Client
 from models.room import Room
