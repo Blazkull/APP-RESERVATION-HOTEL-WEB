@@ -20,16 +20,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def startup():
     create_db_and_tables()
 
-@app.get("/")
+@app.get("/", tags=["TEST_RENDER"])
 def read_root():
     return {"message": "API en línea en Render"}
 
 
 
 # Inclusión de rutas
+app.include_router(login.router) 
 app.include_router(usertypes.router)
 app.include_router(users.router)
-app.include_router(login.router) 
 app.include_router(roomtypes.router)
 app.include_router(roomstatus.router)
 app.include_router(room.router)

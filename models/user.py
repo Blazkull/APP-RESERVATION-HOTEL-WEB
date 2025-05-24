@@ -19,8 +19,8 @@ class User(UserBase, table=True):
     user_type: Optional["UserType"] = Relationship(back_populates="users")
 
 class UserLogin(SQLModel):
-    username: str = Field(max_length=30)
-    email: EmailStr = Field(max_length=100)
+   username: str = Field(max_length=30)
+   password: str = Field(max_length=100)
 
 class UserCreate(UserBase):
     password: str = Field(min_length=6, max_length=100)
@@ -35,9 +35,9 @@ class UserRead(UserBase):
     id: int
 
 
-class Login(UserBase):
-   username: str = Field(max_length=30)
-   password: str = Field(max_length=100)
+class Token(SQLModel):
+    acces_token: str
+    token_type: str
 
 
 class PasswordUpdate(SQLModel):

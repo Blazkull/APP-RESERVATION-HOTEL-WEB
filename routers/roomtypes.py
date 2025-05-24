@@ -9,13 +9,13 @@ router = APIRouter()
 
 
 #lista de tipos de habitacion
-@router.get("/api/roomtypes", response_model=list[RoomType], tags=["ROOM TYPES"])
+@router.get("/api/roomtypes", response_model=list[RoomType], tags=["ROOM TYPES"],dependencies=[(Depends(decode_token))])
 def list_roomtype(session: SessionDep):
     return session.exec(select(RoomType)).all()#esto ejecuta transacciones de sql
 
 
 # obtener tipo de habitacion por id para listar
-@router.get("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"])
+@router.get("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"],dependencies=[(Depends(decode_token))])
 def read_roomtype(roomtype_id: int, session: SessionDep):
 
     try:
@@ -32,7 +32,7 @@ def read_roomtype(roomtype_id: int, session: SessionDep):
         )
 
 #crear tipo de habitacion
-@router.post("/api/roomtypes", response_model=RoomType,status_code=status.HTTP_201_CREATED,tags=["ROOM TYPES"])
+@router.post("/api/roomtypes", response_model=RoomType,status_code=status.HTTP_201_CREATED,tags=["ROOM TYPES"],dependencies=[(Depends(decode_token))])
 def create_roomtype(room_types_data: RoomTypeCreate,session: SessionDep):
     try:
         #validate
@@ -65,7 +65,7 @@ def create_roomtype(room_types_data: RoomTypeCreate,session: SessionDep):
 
 
 # obtener room_types por id para eliminar
-@router.delete("/api/roomtypes/{roomtype_id}",status_code=status.HTTP_200_OK, tags=["ROOM TYPES"])
+@router.delete("/api/roomtypes/{roomtype_id}",status_code=status.HTTP_200_OK, tags=["ROOM TYPES"],dependencies=[(Depends(decode_token))])
 def delete_roomtype(roomtype_id: int, session: SessionDep):
     
     try:
@@ -84,7 +84,7 @@ def delete_roomtype(roomtype_id: int, session: SessionDep):
         )
 
 # obtener tipo de habitacion por id para actualizar
-@router.patch("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"])
+@router.patch("/api/roomtypes/{roomtype_id}", response_model=RoomType, tags=["ROOM TYPES"],dependencies=[(Depends(decode_token))])
 def update_roomtype( roomtype_id: int, roomtype_data: RoomTypeUpdate, session: SessionDep):
 
     try:

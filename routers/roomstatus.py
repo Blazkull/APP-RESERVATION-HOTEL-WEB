@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select, Session
 
+from core.security import decode_token
 from models.room_status import RoomStatus, RoomStatusCreate, RoomStatusUpdate
 from core.database import SessionDep
 
@@ -9,7 +10,7 @@ router = APIRouter()
 
 
 # lista de tipos de habitacion
-@router.get("/api/roomstatus", response_model=list[RoomStatus], tags=["ROOM STATUS"])
+@router.get("/api/roomstatus", response_model=list[RoomStatus], tags=["ROOM STATUS"],dependencies=[(Depends(decode_token))])
 def list_roomstatus(session: SessionDep):
     try:
         return session.exec(select(RoomStatus)).all()  # esto ejecuta transacciones de sql
@@ -21,7 +22,7 @@ def list_roomstatus(session: SessionDep):
 
 
 # obtener tipo de habitacion por id para listar
-@router.get("/api/roomstatus/{roomstatus_id}", response_model=RoomStatus, tags=["ROOM STATUS"])
+@router.get("/api/roomstatus/{roomstatus_id}", response_model=RoomStatus, tags=["ROOM STATUS"],dependencies=[(Depends(decode_token))])
 def read_roomstatus(roomstatus_id: int, session: SessionDep):
     try:
         roomstatus_db = session.get(RoomStatus, roomstatus_id)
@@ -39,7 +40,7 @@ def read_roomstatus(roomstatus_id: int, session: SessionDep):
 
 
 # crear tipo de habitacion
-@router.post("/api/roomstatus", response_model=RoomStatus, status_code=status.HTTP_201_CREATED, tags=["ROOM STATUS"])
+@router.post("/api/roomstatus", response_model=RoomStatus, status_code=status.HTTP_201_CREATED, tags=["ROOM STATUS"],dependencies=[(Depends(decode_token))])
 def create_roomstatus(room_status_data: RoomStatusCreate, session: SessionDep):
     try:
         # roomstatus = RoomStatus.model_validate(room_status_data.model_dump())  # No es necesario con SQLModel
@@ -71,7 +72,7 @@ def create_roomstatus(room_status_data: RoomStatusCreate, session: SessionDep):
 
 
 # obtener room_status por id para eliminar
-@router.delete("/api/roomstatus/{roomstatus_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM STATUS"])
+@router.delete("/api/roomstatus/{roomstatus_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM STATUS"],dependencies=[(Depends(decode_token))])
 def delete_roomstatus(roomstatus_id: int, session: SessionDep):
     try:
         roomstatus_db = session.get(RoomStatus, roomstatus_id)
@@ -91,7 +92,7 @@ def delete_roomstatus(roomstatus_id: int, session: SessionDep):
 
 
 # obtener tipo de habitacion por id para actualizar
-@router.patch("/api/roomstatus/{roomstatus_id}", response_model=RoomStatus, tags=["ROOM STATUS"])
+@router.patch("/api/roomstatus/{roomstatus_id}", response_model=RoomStatus, tags=["ROOM STATUS"],dependencies=[(Depends(decode_token))])
 def update_roomstatus(roomstatus_id: int, roomstatus_data: RoomStatusUpdate, session: SessionDep):
     try:
         roomstatus_db = session.get(RoomStatus, roomstatus_id)

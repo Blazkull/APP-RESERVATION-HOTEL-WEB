@@ -1,6 +1,7 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
+from core.security import decode_token
 from models.client import Client, ClientCreate, ClientStatus, ClientUpdate
 from core.database import SessionDep
 
@@ -8,7 +9,7 @@ router = APIRouter()
 
 
 # lista de tipos de usuario
-@router.get("/api/client", response_model=list[Client], tags=["CLIENT"])
+@router.get("/api/client", response_model=list[Client], tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def list_client(session: SessionDep):
     try:
         clients = session.exec(select(Client)).all()
@@ -20,7 +21,7 @@ def list_client(session: SessionDep):
         )
 
 # obtener tipo de usuario por id para listar
-@router.get("/api/client/{client_id}", response_model=Client, tags=["CLIENT"])
+@router.get("/api/client/{client_id}", response_model=Client, tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def read_client(client_id: int, session: SessionDep):
     try:
         client_db = session.get(Client, client_id)
@@ -37,7 +38,7 @@ def read_client(client_id: int, session: SessionDep):
 
 
 # crear tipo de usuario
-@router.post("/api/client", response_model=Client, status_code=status.HTTP_201_CREATED, tags=["CLIENT"])
+@router.post("/api/client", response_model=Client, status_code=status.HTTP_201_CREATED, tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def create_client(client_data: ClientCreate, session: SessionDep):
    
     try:
@@ -85,33 +86,8 @@ def create_client(client_data: ClientCreate, session: SessionDep):
 
 
 
-'''
-
-# obtener Client por id para eliminar
-@router.delete("/api/client/{client_id}", status_code=status.HTTP_200_OK, tags=["CLIENT"])
-def delete_client(client_id: int, session: SessionDep):
-
-    try:
-        client_db = session.get(Client, client_id)
-        if not client_db:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Client doesn't exist"
-            )
-        session.delete(client_db)
-        session.commit()
-        return {"detail": f"client delete id: {client_id}"}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while deleting client: {str(e)}",
-        )
-
-
-
-'''
-
 #actualizar estado de usuario
-@router.patch("/api/client/{client_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["CLIENT"])
+@router.patch("/api/client/{client_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def update_client_status(client_id: int, status_update: ClientStatus, session: SessionDep):
     try:
         client_db = session.get(Client, client_id)
@@ -142,7 +118,7 @@ def update_client_status(client_id: int, status_update: ClientStatus, session: S
     
 
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/client/{client_id}", response_model=Client, status_code=status.HTTP_200_OK, tags=["CLIENT"])
+@router.patch("/api/client/{client_id}", response_model=Client, status_code=status.HTTP_200_OK, tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def update_client(client_id: int, client_data: ClientUpdate, session: SessionDep):
 
     try:

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
+from core.security import decode_token
 from models.reservation_status import ReservationStatus, ReservationStatusCreate, ReservationStatusUpdate
 from core.database import SessionDep
 
@@ -9,7 +10,7 @@ router = APIRouter()
 
 
 # lista de estados de reserva
-@router.get("/api/reservationstatus", response_model=list[ReservationStatus], tags=["RESERVATION STATUS"])
+@router.get("/api/reservationstatus", response_model=list[ReservationStatus], tags=["RESERVATION STATUS"],dependencies=[(Depends(decode_token))])
 def list_reservation_status(session: SessionDep):
     try:
         return session.exec(select(ReservationStatus)).all()# esto ejecuta transacciones de sql
@@ -20,7 +21,7 @@ def list_reservation_status(session: SessionDep):
         )
 
 # obtener estado de reserva por id para listar
-@router.get("/api/reservationstatus/{reservationstatus_id}", response_model=ReservationStatus, tags=["RESERVATION STATUS"])
+@router.get("/api/reservationstatus/{reservationstatus_id}", response_model=ReservationStatus, tags=["RESERVATION STATUS"],dependencies=[(Depends(decode_token))])
 def read_reservation_status(reservationstatus_id: int, session: SessionDep):
     try:
     
@@ -37,7 +38,7 @@ def read_reservation_status(reservationstatus_id: int, session: SessionDep):
         )
 
 # crear estado de reserva
-@router.post("/api/reservationstatus", response_model=ReservationStatus, status_code=status.HTTP_201_CREATED, tags=["RESERVATION STATUS"])
+@router.post("/api/reservationstatus", response_model=ReservationStatus, status_code=status.HTTP_201_CREATED, tags=["RESERVATION STATUS"],dependencies=[(Depends(decode_token))])
 def create_reservation_status(reservation_status_data: ReservationStatusCreate, session: SessionDep):
    
 
@@ -71,7 +72,7 @@ def create_reservation_status(reservation_status_data: ReservationStatusCreate, 
 
 
 # obtener reservation_status por id para eliminar
-@router.delete("/api/reservationstatus/{reservationstatus_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION STATUS"])
+@router.delete("/api/reservationstatus/{reservationstatus_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION STATUS"],dependencies=[(Depends(decode_token))])
 def delete_reservation_status(reservationstatus_id: int, session: SessionDep):
     try:
         reservationstatus_db = session.get(ReservationStatus, reservationstatus_id)
@@ -88,7 +89,7 @@ def delete_reservation_status(reservationstatus_id: int, session: SessionDep):
                 detail=f"An unexpected error occurred while deleting room status: {str(e)}",
             )
 # obtener estado de reserva por id para actualizar
-@router.patch("/api/reservationstatus/{reservationstatus_id}", response_model=ReservationStatus, tags=["RESERVATION STATUS"])
+@router.patch("/api/reservationstatus/{reservationstatus_id}", response_model=ReservationStatus, tags=["RESERVATION STATUS"],dependencies=[(Depends(decode_token))])
 def update_reservation_status( reservationstatus_id: int, reservation_status_data: ReservationStatusUpdate, session: SessionDep):
     
     try:

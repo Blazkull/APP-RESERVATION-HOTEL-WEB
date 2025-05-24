@@ -1,8 +1,9 @@
 from typing import List
-from fastapi import APIRouter, Query, status, HTTPException
+from fastapi import APIRouter, Depends, Query, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
+from core.security import decode_token
 from models.room import Room, RoomCreate, RoomStatusUpdate, RoomUpdate
 from core.database import SessionDep
 from models.room_status import RoomStatus
@@ -11,7 +12,7 @@ router = APIRouter()
 
 
 #lista de tipos de room
-@router.get("/api/room", response_model=List[Room], tags=["ROOM"])
+@router.get("/api/room", response_model=List[Room], tags=["ROOM"],dependencies=[(Depends(decode_token))])
 def list_room(
     session: SessionDep,
     #paginacion
@@ -30,7 +31,7 @@ def list_room(
 
 
 # obtener tipo de room por id para listar
-@router.get("/api/room/{room_id}", response_model=Room, tags=["ROOM"])
+@router.get("/api/room/{room_id}", response_model=Room, tags=["ROOM"],dependencies=[(Depends(decode_token))])
 def read_room(room_id: int, session: SessionDep):
 
     try:
@@ -53,7 +54,7 @@ def read_room(room_id: int, session: SessionDep):
             detail=f"An error occurred while creating room: {str(e)}",
         )
 #crear tipo de room
-@router.post("/api/room", response_model=Room, status_code=status.HTTP_201_CREATED ,tags=["ROOM"])
+@router.post("/api/room", response_model=Room, status_code=status.HTTP_201_CREATED ,tags=["ROOM"],dependencies=[(Depends(decode_token))])
 def create_room(room_data: RoomCreate,session: SessionDep):
 
     try:
@@ -80,31 +81,9 @@ def create_room(room_data: RoomCreate,session: SessionDep):
             detail=f"An error occurred while creating room: {str(e)}",
         )
 
-'''
-# obtener Room por id para eliminar
-@router.delete("/api/room/{room_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["ROOM"])
-def delete_room(room_id: int, session: SessionDep):
-
-    try:
-        room_db = session.get(Room, room_id)
-        if not room_db:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Room doesn't exits"
-            )
-        session.delete(room_db)
-        session.commit()
-        return {"detail": "Room delete succes"}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while deleting room: {str(e)}",
-        )
-    
-
-'''
 
 #actualizar estado de habitacion
-@router.patch("/api/room/{room_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["ROOM"])
+@router.patch("/api/room/{room_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["ROOM"],dependencies=[(Depends(decode_token))])
 def update_room_status(room_id: int, status_update: RoomStatusUpdate, session: SessionDep):
     try:
         room_db = session.get(Room, room_id)
@@ -135,7 +114,7 @@ def update_room_status(room_id: int, status_update: RoomStatusUpdate, session: S
 
 
 # obtener tipo de room por id para actualizar
-@router.patch("/api/room/{room_id}", response_model=Room, status_code=status.HTTP_200_OK, tags=["ROOM"])
+@router.patch("/api/room/{room_id}", response_model=Room, status_code=status.HTTP_200_OK, tags=["ROOM"],dependencies=[(Depends(decode_token))])
 def update_room( room_id: int, room_data: RoomUpdate, session: SessionDep):
 
     try:

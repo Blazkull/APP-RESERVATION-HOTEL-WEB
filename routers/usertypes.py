@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
+from core.security import decode_token
 from models.user_type import UserType, UserTypeCreate, UserTypeUpdate
 from core.database import SessionDep
 
@@ -9,7 +10,7 @@ router = APIRouter()
 
 
 #lista de tipos de usuario
-@router.get("/api/usertypes", response_model=list[UserType], tags=["USER TYPES"])
+@router.get("/api/usertypes", response_model=list[UserType], tags=["USER TYPES"],dependencies=[(Depends(decode_token))])
 def list_usertype(session: SessionDep):
     try:
         return session.exec(select(UserType)).all()#esto ejecuta transacciones de sql
@@ -21,7 +22,7 @@ def list_usertype(session: SessionDep):
 
 
 # obtener tipo de usuario por id para listar
-@router.get("/api/usertypes/{usertype_id}", response_model=UserType, tags=["USER TYPES"])
+@router.get("/api/usertypes/{usertype_id}", response_model=UserType, tags=["USER TYPES"],dependencies=[(Depends(decode_token))])
 def read_usertype(usertype_id: int, session: SessionDep):
     try:   
         usertype_db = session.get(UserType, usertype_id)
@@ -40,7 +41,7 @@ def read_usertype(usertype_id: int, session: SessionDep):
 
 
 #crear tipo de usuario
-@router.post("/api/usertypes", response_model=UserType, status_code=status.HTTP_201_CREATED ,tags=["USER TYPES"])
+@router.post("/api/usertypes", response_model=UserType, status_code=status.HTTP_201_CREATED ,tags=["USER TYPES"],dependencies=[(Depends(decode_token))])
 def create_user(user_type_data: UserTypeCreate,session: SessionDep):
 
     try:
@@ -72,7 +73,7 @@ def create_user(user_type_data: UserTypeCreate,session: SessionDep):
 
 
 # obtener user_types por id para eliminar
-@router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_200_OK, tags=["USER TYPES"])
+@router.delete("/api/usertypes/{usertype_id}",status_code=status.HTTP_200_OK, tags=["USER TYPES"],dependencies=[(Depends(decode_token))])
 def delete_usertype(usertype_id: int, session: SessionDep):
 
     try:
@@ -92,7 +93,7 @@ def delete_usertype(usertype_id: int, session: SessionDep):
 
 
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/usertypes/{usertype_id}", response_model=UserType, tags=["USER TYPES"])
+@router.patch("/api/usertypes/{usertype_id}", response_model=UserType, tags=["USER TYPES"],dependencies=[(Depends(decode_token))])
 def update_usertype( usertype_id: int, usertype_data: UserTypeUpdate, session: SessionDep):
 
     try:

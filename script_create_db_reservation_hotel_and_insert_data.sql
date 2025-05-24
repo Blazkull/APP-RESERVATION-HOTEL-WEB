@@ -1,7 +1,3 @@
-create database db_reservation_hotel;
-use db_reservation_hotel;
-
-
 INSERT INTO usertype (name, description) VALUES
 ('Admin', 'Administrador del sistema'),
 ('Recepcionista', 'Empleado de recepción'),
@@ -52,8 +48,8 @@ INSERT INTO user (username, email, password, user_type_id,active) VALUES
 ('admin1', 'admin1@hotel.com', 'hashed_password1', 1,true),
 ('recepcion1', 'recepcion1@hotel.com', 'hashed_password2', 2,true),
 ('recepcion2', 'recepcion2@hotel.com', 'hashed_password3', 2,true),
-('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3,true);
-('miguel', 'miguellopez@hotel.com', 'Cul2024*', 1,true),
+('gerente1', 'gerente1@hotel.com', 'hashed_password4', 3,true),
+('miguel', 'miguellopez@hotel.com', 'Cul2024*', 1,true);
 
 
 

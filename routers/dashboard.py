@@ -14,7 +14,7 @@ from models.room import Room
 
 router = APIRouter()
 
-@router.get("/api/dashboard")
+@router.get("/api/dashboard", tags=["DASHBOARD"],dependencies=[(Depends(decode_token))])
 def get_dashboard_data(
     session: SessionDep,
     month: int = Query(default=datetime.now().month, ge=1, le=12),
@@ -59,7 +59,7 @@ def get_dashboard_data(
         "total_clientes": total_clientes
     }
 
-@router.get("/api/dashboard/pdf")
+@router.get("/api/dashboard/pdf", tags=["DASHBOARD"],dependencies=[(Depends(decode_token))])
 def generate_dashboard_pdf(
     session: SessionDep,
     month: int = Query(default=datetime.now().month, ge=1, le=12),

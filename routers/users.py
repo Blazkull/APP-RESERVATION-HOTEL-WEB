@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
+from core.security import decode_token
 from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase, UserStatus
 from core.database import SessionDep
 
@@ -9,7 +10,7 @@ router = APIRouter()
 
 
 #lista de tipos de usuario
-@router.get("/api/user", response_model=list[User], tags=["USER"])
+@router.get("/api/user", response_model=list[User], tags=["USER"],dependencies=[(Depends(decode_token))])
 def list_user(session: SessionDep):
     try:
         return session.exec(select(User)).all()#esto ejecuta transacciones de sql
@@ -21,7 +22,7 @@ def list_user(session: SessionDep):
 
 
 # obtener tipo de usuario por id para listar
-@router.get("/api/user/{user_id}", response_model=User, tags=["USER"])
+@router.get("/api/user/{user_id}", response_model=User, tags=["USER"],dependencies=[(Depends(decode_token))])
 def read_user(user_id: int, session: SessionDep):
     try:
         user_db = session.get(User, user_id)
@@ -37,7 +38,7 @@ def read_user(user_id: int, session: SessionDep):
         )
 
 #crear  usuario
-@router.post("/api/user", response_model=User, status_code=status.HTTP_201_CREATED ,tags=["USER"])
+@router.post("/api/user", response_model=User, status_code=status.HTTP_201_CREATED ,tags=["USER"],dependencies=[(Depends(decode_token))])
 def create_user(user_data: UserCreate,session: SessionDep):
 
     try:
@@ -81,33 +82,8 @@ def create_user(user_data: UserCreate,session: SessionDep):
 
     
 
-'''
-
-
-# obtener User por id para eliminar
-@router.delete("/api/user/{user_id}",status_code=status.HTTP_200_OK, tags=["USER"])
-def delete_user(user_id: int, session: SessionDep):
-
-    try:
-        user_db = session.get(User, user_id)
-        if not user_db:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exits"
-            )
-        session.delete(user_db)
-        session.commit()
-        return {"detail": "user deleted succesfully"}
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"this list usertype doesn´t: {str(e)}",
-        )
-
-
-
-'''
 # obtener tipo de usuario por id para actualizar
-@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_200_OK, tags=["USER"])
+@router.patch("/api/user/{user_id}", response_model=User, status_code=status.HTTP_200_OK, tags=["USER"],dependencies=[(Depends(decode_token))])
 def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
 
     try:
@@ -151,7 +127,7 @@ def update_user( user_id: int, user_data: UserUpdate, session: SessionDep):
 
 
 #actualizar estado de usuario
-@router.patch("/api/user/{user_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"])
+@router.patch("/api/user/{user_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"],dependencies=[(Depends(decode_token))])
 def update_user_status(user_id: int, status_update: UserStatus, session: SessionDep):
     try:
         user_db = session.get(User, user_id)
@@ -182,7 +158,7 @@ def update_user_status(user_id: int, status_update: UserStatus, session: Session
 
 #actualizar la contraseña
 
-@router.patch("/api/user/{user_id}/password", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"])
+@router.patch("/api/user/{user_id}/password", response_model=dict, status_code=status.HTTP_200_OK, tags=["USER"],dependencies=[(Depends(decode_token))])
 def update_user_password(user_id: int, password_update: PasswordUpdate, session: SessionDep):
     try:
         user_db = session.get(User, user_id)

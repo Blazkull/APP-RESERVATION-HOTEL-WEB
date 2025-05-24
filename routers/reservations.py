@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException, Query
+from fastapi import APIRouter, Depends, status, HTTPException, Query
 from pydantic import ValidationError
 from sqlmodel import Session, select
 from typing import List, Optional
@@ -6,6 +6,7 @@ from decimal import Decimal
 from datetime import date
 
 from core.database import SessionDep
+from core.security import decode_token
 from models.room import Room  # Asegúrate de que este modelo exista
 from models.reservation import Reservation, ReservationCreate, ReservationRead, ReservationUpdate
 
@@ -31,7 +32,7 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
         )
 
 # POST para crear una nueva reserva
-@router.post("/api/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"])
+@router.post("/api/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def create_reservation(reservation_create: ReservationCreate, session: SessionDep):
     try:
         #  Calcula el total antes de crear la instancia de la reserva.
@@ -71,7 +72,7 @@ def create_reservation(reservation_create: ReservationCreate, session: SessionDe
         )
 
 # GET para obtener una reserva por su ID
-@router.get("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.get("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def read_reservation(reservation_id: int, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
@@ -89,7 +90,7 @@ def read_reservation(reservation_id: int, session: SessionDep):
         )
 
 # GET para obtener todas las reservas (con paginación opcional)
-@router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def read_all_reservations(
     session: SessionDep,
     page: Optional[int] = Query(1, ge=1, description="Número de página a obtener"),
@@ -114,7 +115,7 @@ def read_all_reservations(
         )
 
 # PATCH para actualizar una reserva
-@router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def update_reservation(reservation_id: int, reservation_update: ReservationUpdate, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
@@ -146,7 +147,7 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
         )
 
 # DELETE para eliminar una reserva
-@router.delete("/api/reservations/{reservation_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION"])
+@router.delete("/api/reservations/{reservation_id}", status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def delete_reservation(reservation_id: int, session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
