@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from core.security import decode_token
+from core.security import decode_token, hash_password, verify_password
 from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase, UserStatus
 from core.database import SessionDep
 
@@ -61,6 +61,14 @@ def create_user(user_data: UserCreate,session: SessionDep):
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
+
+        # HASH PASSWORD BEFORE PERSISTENCE
+        hashed_password = hash_password(user_dict.pop("password"))
+        user_dict["password"] = hashed_password
+
+        # Build SQLModel instance *after* mutating dict
+        user = User.model_validate(user_dict)
+        
         session.add(user)#insertamos datos
         session.commit()#conectamos la bd
         session.refresh(user)#refrescamos despues de insertar datos
@@ -167,9 +175,10 @@ def update_user_password(user_id: int, password_update: PasswordUpdate, session:
                 status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exist"
             )
 
-        if password_update.password == user_db.password:
+        if verify_password(password_update.password, user_db.password):
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password min:8 caracters"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="New password cannot be the same as the old password",
             )
 
         user_db.password = password_update.password  
