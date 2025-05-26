@@ -16,7 +16,6 @@ class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     active:bool =Field(default=True)
     
-    last_token: Optional[str] = Field(default=None, max_length=500)
     
     reservations: List["Reservation"] = Relationship(back_populates="user")
     user_type: Optional["UserType"] = Relationship(back_populates="users")
