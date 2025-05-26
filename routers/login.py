@@ -3,6 +3,7 @@ from sqlmodel import select
 from core.database import SessionDep
 from core.security import encode_token
 from models.user import  User, UserLogin
+from core.security import verify_password
 
 router = APIRouter()
 
@@ -17,7 +18,7 @@ def login(user_data:UserLogin,session: SessionDep):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found",
             )
-        if user_data.password != user_db.password:
+        if not verify_password(user_data.password, user_db.password):
             raise HTTPException(status_code=400,detail="Invalid credentials")
         token = encode_token({"username":user_data.username,"email": user_db.email})
 
