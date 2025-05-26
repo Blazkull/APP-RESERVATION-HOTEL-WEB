@@ -11,7 +11,14 @@ router = APIRouter()
 @router.post("/login", tags=["AUTH"])
 def login(user_data:UserLogin,session: SessionDep):
     try:
-        user_db = session.exec(select(User).where(User.username == user_data.username)).first()
+        token = encode_token({"username": user_data.username, "email": user_db.email})
+
+        user_db.last_token = token 
+        session.add(user_db)
+        session.commit()
+
+        return {"acces_token": token, "token_type": "barber"}
+
 
         if not user_db:
             raise HTTPException(
