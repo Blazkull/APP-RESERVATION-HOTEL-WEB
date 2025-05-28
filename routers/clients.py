@@ -1,17 +1,17 @@
 from fastapi import APIRouter, status, HTTPException
 from pydantic import ValidationError
-from sqlmodel import select
-from models.client import Client, ClientCreate, ClientUpdate
+from sqlmodel import select, desc # Import 'desc'
+from models.client import Client, ClientCreate, ClientStatus, ClientUpdate
 from core.database import SessionDep
 
 router = APIRouter()
-
 
 # lista de tipos de usuario
 @router.get("/api/client", response_model=list[Client], tags=["CLIENT"])
 def list_client(session: SessionDep):
     try:
-        clients = session.exec(select(Client)).all()
+        # Sort by ID in descending order
+        clients = session.exec(select(Client).order_by(desc(Client.id))).all()
         return clients
     except Exception as e:
         raise HTTPException(
@@ -39,7 +39,7 @@ def read_client(client_id: int, session: SessionDep):
 # crear tipo de usuario
 @router.post("/api/client", response_model=Client, status_code=status.HTTP_201_CREATED, tags=["CLIENT"])
 def create_client(client_data: ClientCreate, session: SessionDep):
-   
+    
     try:
         # Validate data base
         client = Client.model_validate(client_data.model_dump())
@@ -84,28 +84,36 @@ def create_client(client_data: ClientCreate, session: SessionDep):
 
 
 
-
-
-# obtener Client por id para eliminar
-@router.delete("/api/client/{client_id}", status_code=status.HTTP_200_OK, tags=["CLIENT"])
-def delete_client(client_id: int, session: SessionDep):
-
+#actualizar estado de usuario
+@router.patch("/api/client/{client_id}/status", response_model=dict, status_code=status.HTTP_200_OK, tags=["CLIENT"])
+def update_client_status(client_id: int, status_update: ClientStatus, session: SessionDep):
     try:
         client_db = session.get(Client, client_id)
         if not client_db:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Client doesn't exist"
             )
-        session.delete(client_db)
+
+        # Evita actualizar si el estado no ha cambiado
+        if status_update.active == client_db.active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New status is the same as the current one"
+            )
+
+        client_db.active = status_update.active       
+        session.add(client_db)
         session.commit()
-        return {"detail": f"client delete id: {client_id}"}
+        session.refresh(client_db)
+
+        return {"message": f"Client '{client_db.first_name} {client_db.last_name}' has successfully updated their status to: {client_db.active}"}
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while deleting client: {str(e)}",
+            detail=f"An error occurred while updating status: {str(e)}",
         )
-
-
+    
 
 # obtener tipo de usuario por id para actualizar
 @router.patch("/api/client/{client_id}", response_model=Client, status_code=status.HTTP_200_OK, tags=["CLIENT"])

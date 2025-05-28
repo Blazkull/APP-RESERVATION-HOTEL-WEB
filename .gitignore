@@ -16,4 +16,5 @@ routers/__pycache__/users.cpython-312.pyc
 routers/__pycache__/usertypes.cpython-312.pyc
 .env
 note.txt
-
+.\local
+local/

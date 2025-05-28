@@ -24,11 +24,14 @@ class UserLogin(SQLModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=6, max_length=100)
+    active:bool =Field(default=True)
 
 class UserUpdate(SQLModel):
     username: Optional[str] = Field(default=None, max_length=30)
     email: Optional[EmailStr] = None
-    active: Optional[bool] =Field(default=True)
+    password: Optional[str] = Field(default=None, min_length=6, max_length=100)
+    user_type_id: Optional[int] = None
+    active: Optional[bool] = Field(default=True)
 
 class UserRead(UserBase):
     id: int
@@ -38,10 +41,24 @@ class Login(UserBase):
    username: str = Field(max_length=30)
    password: str = Field(max_length=100)
 
+# En models/user.py
+class LoginRequest(SQLModel):
+    username: str
+    password: str
+
+# En models/user.py
+class UserLogin(SQLModel):
+    message: str
+    username: str
+    user_type_id: int
+
+
 
 class PasswordUpdate(SQLModel):
     password: str = Field(max_length=100)
-    
+
+class UserStatus(SQLModel):
+    active: Optional[bool] = Field(default=True)
    
 from typing import TYPE_CHECKING
 

@@ -1,12 +1,12 @@
 from fastapi import APIRouter, status, HTTPException, Query
 from pydantic import ValidationError
-from sqlmodel import Session, select
+from sqlmodel import Session, select, desc # Import 'desc' for descending order
 from typing import List, Optional
 from decimal import Decimal
 from datetime import date
 
 from core.database import SessionDep
-from models.room import Room  # Asegúrate de que este modelo exista
+from models.room import Room
 from models.reservation import Reservation, ReservationCreate, ReservationRead, ReservationUpdate
 
 router = APIRouter()
@@ -21,9 +21,9 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
             return total
         return Decimal(0.00)
     except ValueError as ve:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
-            )
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -34,7 +34,6 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
 @router.post("/api/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"])
 def create_reservation(reservation_create: ReservationCreate, session: SessionDep):
     try:
-        #  Calcula el total antes de crear la instancia de la reserva.
         room = session.get(Room, reservation_create.room_id)
         if not room:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Room not found")
@@ -88,20 +87,15 @@ def read_reservation(reservation_id: int, session: SessionDep):
             detail=f"Error reading reservation: {str(e)}"
         )
 
-# GET para obtener todas las reservas (con paginación opcional)
+# GET para obtener todas las reservas (ahora ordenadas por ID descendente)
 @router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"])
 def read_all_reservations(
     session: SessionDep,
-    page: Optional[int] = Query(1, ge=1, description="Número de página a obtener"),
-    limit: Optional[int] = Query(10, ge=1, le=100, description="Cantidad de items por página"),
 ):
     try:
-        query = select(Reservation)
-        if page is not None and limit is not None:
-            offset = (page - 1) * limit
-            reservations = session.exec(query.offset(offset).limit(limit)).all()
-        else:
-            reservations = session.exec(query).all()
+        # Sort by ID in descending order
+        query = select(Reservation).order_by(desc(Reservation.id))
+        reservations = session.exec(query).all()
         return reservations
     except ValueError as ve:
         raise HTTPException(
@@ -125,7 +119,7 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
         for key, value in reservation_data.items():
             setattr(db_reservation, key, value)
 
-        db_reservation.total = calculate_total_reservation(session, db_reservation) # Recalcular el total si las fechas o la habitación cambian
+        db_reservation.total = calculate_total_reservation(session, db_reservation)
         session.add(db_reservation)
         session.commit()
         session.refresh(db_reservation)
@@ -154,7 +148,7 @@ def delete_reservation(reservation_id: int, session: SessionDep):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
         session.delete(db_reservation)
         session.commit()
-        return  # No se devuelve contenido con HTTP 204
+        return
     except ValueError as ve:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
