@@ -15,6 +15,7 @@ def create_db_and_tables():
     from models.room import Room
     from models.room_type import RoomType
     from models.room_status import RoomStatus
+    from models.token import Token
 
     SQLModel.metadata.create_all(engine)
 

@@ -2,6 +2,7 @@ from typing import Optional, List
 from sqlmodel import SQLModel, Field, Relationship
 from pydantic import EmailStr
 
+
 class UserBase(SQLModel):
     username: str = Field(max_length=30,unique=True)
     email: EmailStr = Field(max_length=100,unique=True)
@@ -15,8 +16,9 @@ class User(UserBase, table=True):
     active:bool =Field(default=True)
     
 
-    reservations: List["Reservation"] = Relationship(back_populates="user")
-    user_type: Optional["UserType"] = Relationship(back_populates="users")
+    reservations: List["Reservation"] = Relationship(back_populates="user")#reservationf
+    user_type: Optional["UserType"] = Relationship(back_populates="users")#tipo de usuario
+    tokens: List["Token"] = Relationship(back_populates="user")#token
 
 class UserLogin(SQLModel):
    username: str = Field(max_length=30)
@@ -35,11 +37,6 @@ class UserRead(UserBase):
     id: int
 
 
-class Token(SQLModel):
-    acces_token: str
-    token_type: str
-
-
 class PasswordUpdate(SQLModel):
     password: str = Field(max_length=100)
 
@@ -51,3 +48,4 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from models.reservation import Reservation
     from models.user_type import UserType
+    from models.token import Token
