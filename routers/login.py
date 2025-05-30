@@ -9,7 +9,7 @@ from models.token import AccessTokenResponse,Token as DBToken
 router = APIRouter()
 
 
-@router.post("/login", tags=["AUTH"], response_model=AccessTokenResponse)
+@router.post("/api/login", tags=["AUTH"], response_model=AccessTokenResponse)
 def login(user_data:UserLogin,session: SessionDep):
     try:
         user_db = session.exec(select(User).where(User.username == user_data.username)).first()
