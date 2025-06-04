@@ -31,6 +31,8 @@ class UserCreate(UserBase):
 class UserUpdate(SQLModel):
     username: Optional[str] = Field(default=None, max_length=30)
     email: Optional[EmailStr] = None
+    password: str = Field(max_length=100)
+    user_type_id: int = Field(foreign_key="usertype.id") 
     active: Optional[bool] =Field(default=True)
 
 class UserRead(UserBase):
