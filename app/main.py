@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware  # habilitar CORS
 
 from fastapi.staticfiles import StaticFiles
 
+from dotenv import load_dotenv
+import os
 
 app = FastAPI()
 
@@ -19,6 +21,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.on_event("startup")
 def startup():
     create_db_and_tables()
+    CONEXION_DB= os.getenv('SECRET_KEY')
+    print(CONEXION_DB)
 
 @app.get("/", tags=["TEST_RENDER"])
 def read_root():
