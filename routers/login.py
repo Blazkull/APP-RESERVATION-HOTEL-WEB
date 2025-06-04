@@ -1,13 +1,15 @@
+from datetime import datetime
 from fastapi import APIRouter, status, HTTPException
 from sqlmodel import select
 from core.database import SessionDep
-from core.security import encode_token
+from core.security import encode_token , ACCESS_TOKEN_EXPIRE_MINUTES
 from models.user import  User, UserLogin
+from models.token import AccessTokenResponse,Token as DBToken
 
 router = APIRouter()
 
 
-@router.post("/login", tags=["AUTH"])
+@router.post("/api/login", tags=["AUTH"], response_model=AccessTokenResponse)
 def login(user_data:UserLogin,session: SessionDep):
     try:
         user_db = session.exec(select(User).where(User.username == user_data.username)).first()
@@ -19,9 +21,34 @@ def login(user_data:UserLogin,session: SessionDep):
             )
         if user_data.password != user_db.password:
             raise HTTPException(status_code=400,detail="Invalid credentials")
-        token = encode_token({"username":user_data.username,"email": user_db.email})
+        # Invalida todos los tokens anteriores para este usuario
+        existing_tokens = session.exec(
+            select(DBToken).where(DBToken.user_id == user_db.id, DBToken.status_token == True)
+        ).all()
+        for token_entry in existing_tokens:
+            token_entry.status_token = False
+            session.add(token_entry)
+        session.commit() # Guarda los cambios de invalidación
 
-        return{"acces_token":token, "token_type":"barber"} # retorna el token para guardarlo en algun lado
+        # Crea un nuevo token (at=acces token)
+        encoded_jwt, expires_at = encode_token({"username": user_data.username, "email": user_db.email})
+
+        # Almacena el nuevo token en la base de datos
+        new_token_db = DBToken(
+            token=encoded_jwt,
+            user_id=user_db.id,
+            expiration=expires_at,
+            status_token=True,
+            date_token=datetime.utcnow()
+        )
+        session.add(new_token_db)
+        session.commit()
+        session.refresh(new_token_db) # Refresca para obtener el ID si lo necesitas
+
+        return {"acces_token": encoded_jwt, "token_type": "bearer"} 
+    
+    except HTTPException as http_exc:
+        raise http_exc # Re-lanza las HTTPException directamente
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
