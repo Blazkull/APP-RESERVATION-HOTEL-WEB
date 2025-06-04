@@ -1,49 +1,28 @@
-# D:\APP-RESERVATION-HOTEL-WEB\core\security.py
 
 from datetime import datetime, timedelta
 from sqlmodel import select
 from core.database import SessionDep
+from models.user import  User
 from typing import Annotated
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import  OAuth2PasswordBearer
 from fastapi.exceptions import HTTPException
 from models.token import Token as DBToken
 
 from jose import JWTError, jwt
 
-# --- INICIO DE LA MODIFICACIÓN ---
-# Elimina estas dos líneas:
-# from dotenv import load_dotenv
-# import os
+from dotenv import load_dotenv
+import os
 
-<<<<<<< HEAD
-# Importa tus settings directamente desde core.config
-from core.config import settings
-from models.user import User
-# --- FIN DE LA MODIFICACIÓN ---
-
-
-# Ahora usa settings.SECRET_KEY y settings.ALGORITHM
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-
-
-=======
 load_dotenv()
 SECRET_KEY= os.getenv('SECRET_KEY')
 ALGORITHM= os.getenv('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
->>>>>>> b1bd5fcd832722c77dffe084bd2dbed63c3e5410
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  #24 horas = 1440 minutos
+
 #instancia de una clase
 outh2_scheme= OAuth2PasswordBearer(tokenUrl="token")
 
 def encode_token(data:dict):
-<<<<<<< HEAD
-    token = jwt.encode(data,SECRET_KEY,algorithm=ALGORITHM)
-    return token 
-
-def decode_token(token:Annotated[str,Depends(outh2_scheme)], session: SessionDep):
-=======
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
@@ -52,25 +31,18 @@ def decode_token(token:Annotated[str,Depends(outh2_scheme)], session: SessionDep
     return token, expire # Retorna el token, la fecha de expiración y fecha de creacion
     
 def decode_token(token: Annotated[str, Depends(outh2_scheme)], session: SessionDep):
->>>>>>> b1bd5fcd832722c77dffe084bd2dbed63c3e5410
     try:
         data = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = data.get('username')
+        print (username)
         if username is None:
             raise HTTPException(status_code=400, detail="The token data is incomplete")
-
+        
         user_db = session.exec(select(User).where(User.username == username)).first()
-
+        
         if user_db is None:
             raise HTTPException(status_code=404, detail="user not found")
         if not user_db.active:
-<<<<<<< HEAD
-            raise HTTPException(status_code=403, detail="User  disenable. please, contact your manager system") 
-        return
-
-    except jwt.JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-=======
             raise HTTPException(status_code=403, detail="User disabled. Please, contact your system manager") 
         
         #Comprobar si el token está activo en la base de datos
@@ -90,4 +62,3 @@ def decode_token(token: Annotated[str, Depends(outh2_scheme)], session: SessionD
         # Captura cualquier otra excepción inesperada
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
 
->>>>>>> b1bd5fcd832722c77dffe084bd2dbed63c3e5410
