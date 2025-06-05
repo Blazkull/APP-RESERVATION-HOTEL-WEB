@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Query
 from pydantic import ValidationError
-from sqlmodel import Session, select
-from typing import List, Optional
+from sqlmodel import Session, func, select
+from typing import Any, Dict, List, Optional
 from decimal import Decimal
 from datetime import date
 
@@ -89,21 +89,27 @@ def read_reservation(reservation_id: int, session: SessionDep):
             detail=f"Error reading reservation: {str(e)}"
         )
 
-# GET para obtener todas las reservas (con paginación opcional)
-@router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
+# GET para obtener todas las reservas con paginación
+@router.get("/api/reservations/", response_model=Dict[str, Any], status_code=status.HTTP_200_OK, tags=["RESERVATION"], dependencies=[Depends(decode_token)])
 def read_all_reservations(
     session: SessionDep,
-    page: Optional[int] = Query(1, ge=1, description="Número de página a obtener"),
-    limit: Optional[int] = Query(20, ge=1, le=100, description="Cantidad de items por página"),
+    page: int = Query(1, ge=1, description="Número de página a obtener"),
+    limit: int = Query(20, ge=1, le=100, description="Cantidad de items por página"),
 ):
     try:
-        query = select(Reservation)
-        if page is not None and limit is not None:
-            offset = (page - 1) * limit
-            reservations = session.exec(query.offset(offset).limit(limit)).all()
-        else:
-            reservations = session.exec(query).all()
-        return reservations
+        offset = (page - 1) * limit
+
+        total_items = session.exec(select(func.count(Reservation.id))).one()
+
+        reservations = session.exec(
+            select(Reservation)
+            .offset(offset)
+            .limit(limit)
+        ).all()
+        
+        # Devolver las reservas y el total de elementos
+        return {"items": reservations, "total_items": total_items, "page": page, "limit": limit}
+
     except ValueError as ve:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
@@ -113,7 +119,6 @@ def read_all_reservations(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error reading all reservations: {str(e)}"
         )
-
 # PATCH para actualizar una reserva
 @router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def update_reservation(reservation_id: int, reservation_update: ReservationUpdate, session: SessionDep):
