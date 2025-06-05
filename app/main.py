@@ -11,8 +11,6 @@ from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-
-# montar carpeta 'static' para servir archivos como PDFs, imágenes, etc.
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -26,7 +24,7 @@ def read_root():
 
 
 
-# Inclusión de rutas
+
 app.include_router(login.router) 
 app.include_router(usertypes.router)
 app.include_router(users.router)
@@ -62,7 +60,7 @@ app.add_middleware(
 )
 
 
-#parametro para conectar con render
-if __name__ == "__main__":
+
+if __name__ == "_main_":
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=False)
