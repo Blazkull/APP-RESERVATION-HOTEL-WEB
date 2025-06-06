@@ -107,33 +107,19 @@ def read_all_reservations(session: SessionDep):
             detail=f"Error reading all reservations: {str(e)}"
         )
 
-
 # PATCH para actualizar una reserva
 @router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
-def update_reservation(reservation_id: int, reservation_update: ReservationUpdate, session: SessionDep):
+def update_reservation(reservation_id: int, reservation_update: ReservationUpdate,session: SessionDep):
     try:
         db_reservation = session.get(Reservation, reservation_id)
         if db_reservation is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
 
-        # Aplica solo los campos que fueron enviados en la actualización
-        # Asegúrate de que los valores de `reservation_update` sean los que realmente se están usando
-        for key, value in reservation_update.model_dump(exclude_unset=True).items():
-            if key == 'total':
-                continue # No actualizamos el total desde el payload, lo recalculamos
+        reservation_data = reservation_update.model_dump(exclude_unset=True)
+        for key, value in reservation_data.items():
             setattr(db_reservation, key, value)
 
-        # --- Punto de Verificación 1 ---
-        print(f"DEBUG: db_reservation.room_id antes del cálculo: {db_reservation.room_id}")
-        print(f"DEBUG: db_reservation.check_in_date antes del cálculo: {db_reservation.check_in_date}")
-        print(f"DEBUG: db_reservation.check_out_date antes del cálculo: {db_reservation.check_out_date}")
-
-        # Recalcular el total SIEMPRE después de aplicar los posibles cambios en fechas o habitación
-        db_reservation.total = calculate_total_reservation(session, db_reservation) 
-        
-        # --- Punto de Verificación 2 ---
-        print(f"DEBUG: total calculado: {db_reservation.total}")
-
+        db_reservation.total = calculate_total_reservation(session, db_reservation)
         session.add(db_reservation)
         session.commit()
         session.refresh(db_reservation)
