@@ -93,16 +93,11 @@ def read_reservation(reservation_id: int, session: SessionDep):
 @router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def read_all_reservations(
     session: SessionDep,
-    page: Optional[int] = Query(1, ge=1, description="Número de página a obtener"),
-    limit: Optional[int] = Query(20, ge=1, le=100, description="Cantidad de items por página"),
 ):
     try:
-        query = select(Reservation)
-        if page is not None and limit is not None:
-            offset = (page - 1) * limit
-            reservations = session.exec(query.offset(offset).limit(limit)).all()
-        else:
-            reservations = session.exec(query).all()
+        # Sort by ID in descending order
+        query = select(Reservation).order_by(desc(Reservation.id))
+        reservations = session.exec(query).all()
         return reservations
     except ValueError as ve:
         raise HTTPException(
