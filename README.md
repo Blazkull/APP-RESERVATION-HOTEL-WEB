@@ -177,7 +177,8 @@ Para garantizar la seguridad de los endpoints, se ha implementado **autenticaciÃ
 
 
 ## ğŸ“‚ Estructura del Proyecto
-![image](https://github.com/user-attachments/assets/8bab2428-d924-4883-99fa-47fb91ddf5b3)
+![image](https://github.com/user-attachments/assets/273df9a9-ef4a-4f86-8f67-f1c2a4acc512)
+
 
 
 
