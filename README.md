@@ -43,6 +43,8 @@ La documentación interactiva (Swagger UI y ReDoc) facilita la comprensión y pr
 - PyMySQL
 - Uvicorn (ASGI server)
 - Swagger UI (Documentación automática)
+- JWT
+- OAuth2
 
 ## 📦 REQUISITOS PREVIOS
 
