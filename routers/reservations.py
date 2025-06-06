@@ -20,15 +20,12 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
         if room:
             duration = reservation.check_out_date - reservation.check_in_date
             
-            # Si la duración es 0 o negativa, se establece en 1 día.
+            # Si la duración es 0 se establece en 1 día.
             # Esto maneja casos donde check_in_date y check_out_date son el mismo día.
             num_days = max(1, duration.days)
             
             total = room.price_per_night * Decimal(num_days)
-            
-            # Agrega un print aquí para depurar
-            print(f"DEBUG: Room Price: {room.price_per_night}, Check-in: {reservation.check_in_date}, Check-out: {reservation.check_out_date}, Duration Days (raw): {duration.days}, Adjusted Duration Days: {num_days}, Calculated Total: {total}")
-            
+
             return total
         return Decimal("0.00") # <--- Esto se devuelve si la habitación no se encuentra
     except ValueError as ve:
