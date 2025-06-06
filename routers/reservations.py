@@ -62,6 +62,7 @@ def calculate_total_reservation(session: Session, reservation: Reservation) -> D
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error calculating total for reservation: {str(e)}"
         )
+    
 # POST para crear una nueva reserva
 @router.post("/api/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def create_reservation(reservation_create: ReservationCreate, session: SessionDep):
