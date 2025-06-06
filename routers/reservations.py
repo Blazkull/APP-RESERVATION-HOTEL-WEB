@@ -116,6 +116,9 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
 
         reservation_data = reservation_update.model_dump(exclude_unset=True)
+        if 'total' in reservation_data:
+            del reservation_data['total']
+
         for key, value in reservation_data.items():
             setattr(db_reservation, key, value)
 
