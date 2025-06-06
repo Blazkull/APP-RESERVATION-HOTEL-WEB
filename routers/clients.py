@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
-from sqlmodel import select
+from sqlmodel import desc, select
 from core.security import decode_token
 from models.client import Client, ClientCreate, ClientStatus, ClientUpdate
 from core.database import SessionDep
@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get("/api/client", response_model=list[Client], tags=["CLIENT"],dependencies=[(Depends(decode_token))])
 def list_client(session: SessionDep):
     try:
-        clients = session.exec(select(Client)).all()
+        clients = session.exec(select(Client).order_by(desc(Client.id))).all()
         return clients
     except Exception as e:
         raise HTTPException(
