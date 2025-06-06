@@ -151,8 +151,8 @@ Consulta toda la documentación en `/docs` para explorar todos los recursos disp
 
 
 ## 📂 Estructura del Proyecto
+![image](https://github.com/user-attachments/assets/785831b9-0e1a-467a-8337-79e84880834d)
 
-![image](https://github.com/user-attachments/assets/9205a754-11ce-44b1-a160-49c1e5c7fbc2)
 
 # Estructura de la API de Reserva de Hotel
 - `📂 app/`: Contiene la lógica principal de la aplicación.
