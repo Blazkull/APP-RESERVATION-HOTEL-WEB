@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 class RoomBase(SQLModel):
     room_number: str = Field(max_length=30,unique=True)
-    price_per_night: Decimal
-    capacity: int = Field(default=1)
+    price_per_night: Decimal = Field(..., gt=0, description="El precio por noche debe ser mayor que 0")
+    capacity: int = Field(..., gt=0, description="La capacidad debe ser mayor que 0")
     room_type_id: int = Field(foreign_key="roomtype.id")
     room_status_id: int = Field(foreign_key="roomstatus.id")
     active:bool =Field(default=True)
@@ -31,8 +31,8 @@ class RoomCreate(RoomBase):
 
 class RoomUpdate(SQLModel):
     room_number: Optional[str] = Field(default=None, max_length=30)
-    price_per_night: Optional[Decimal] = None
-    capacity: Optional[int] = Field(default=None)
+    price_per_night: Optional[Decimal] = Field(None, gt=0, description="El precio por noche debe ser mayor que 0")
+    capacity: Optional[int] = Field(None, gt=0, description="La capacidad debe ser mayor que 0")
     room_type_id: Optional[int] = Field(default=None, foreign_key="roomtype.id")
     room_status_id: Optional[int] = Field(default=None, foreign_key="roomstatus.id")
     active:bool =Field(default=True)
