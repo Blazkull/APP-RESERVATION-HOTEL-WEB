@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException, Query
 from pydantic import ValidationError
-from sqlmodel import Session, select
+from sqlmodel import Session, desc, select
 from typing import List, Optional
 from decimal import Decimal
 from datetime import date
@@ -91,9 +91,7 @@ def read_reservation(reservation_id: int, session: SessionDep):
 
 # GET para obtener todas las reservas con paginación
 @router.get("/api/reservations/", response_model=List[ReservationRead], status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
-def read_all_reservations(
-    session: SessionDep,
-):
+def read_all_reservations(session: SessionDep):
     try:
         # Sort by ID in descending order
         query = select(Reservation).order_by(desc(Reservation.id))
