@@ -173,7 +173,8 @@ Para garantizar la seguridad de los endpoints, se ha implementado **autenticaci�
 ## ⚙ Diagrama entidad relacion base de datos
 
 
-![digrama](https://github.com/user-attachments/assets/fc9f4fe7-daaf-41de-8937-56db96f438a4)
+![image](https://github.com/user-attachments/assets/3f8133b9-4818-49de-b33d-54175faeed50)
+
 
 
 ## 📂 Estructura del Proyecto
