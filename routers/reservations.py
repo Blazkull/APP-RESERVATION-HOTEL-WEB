@@ -116,34 +116,16 @@ def read_all_reservations(session: SessionDep):
 @router.patch("/api/reservations/{reservation_id}", response_model=ReservationRead, status_code=status.HTTP_200_OK, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def update_reservation(reservation_id: int, reservation_update: ReservationUpdate,session: SessionDep):
     try:
-        print(f"Datos recibidos del frontend para la reserva {reservation_id}: {reservation_update.model_dump_json(indent=2)}")
-        
         db_reservation = session.get(Reservation, reservation_id)
         if db_reservation is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
 
         reservation_data = reservation_update.model_dump(exclude_unset=True)
-        
-        # Primero, aplica todos los cambios, excepto el 'total' si viene del frontend, ya que lo vamos a calcular
-        # O simplemente sobrescribe 'total' después
         for key, value in reservation_data.items():
             setattr(db_reservation, key, value)
 
-        # Validación de fechas después de aplicar la actualización
-        if db_reservation.check_in_date and db_reservation.check_out_date:
-            if db_reservation.check_out_date <= db_reservation.check_in_date:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Check-out date must be after check-in date."
-                )
-
-        # Ahora, calcula el total con los datos actualizados de db_reservation
-        # Esta llamada es correcta si los datos de db_reservation (room_id, fechas) están actualizados.
         db_reservation.total = calculate_total_reservation(session, db_reservation)
-        
-        # Agrega este print para ver el total justo antes de guardarlo
-        print(f"Total calculado para la reserva {reservation_id}: {db_reservation.total}")
-        
+        print (db_reservation.total)
         session.add(db_reservation)
         session.commit()
         session.refresh(db_reservation)
