@@ -115,14 +115,14 @@ def update_reservation(reservation_id: int, reservation_update: ReservationUpdat
         if db_reservation is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Reservation not found")
 
-        reservation_data = reservation_update.model_dump(exclude_unset=True)
-        if 'total' in reservation_data:
-            del reservation_data['total']
-
-        for key, value in reservation_data.items():
+        for key, value in reservation_update.model_dump(exclude_unset=True).items():
+            if key == 'total':
+                continue
             setattr(db_reservation, key, value)
 
-        db_reservation.total = calculate_total_reservation(session, db_reservation) # Recalcular el total si las fechas o la habitación cambian
+        # Recalcular el total SIEMPRE después de aplicar los posibles cambios en fechas o habitación
+        db_reservation.total = calculate_total_reservation(session, db_reservation) 
+        
         session.add(db_reservation)
         session.commit()
         session.refresh(db_reservation)
