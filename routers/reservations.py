@@ -12,30 +12,56 @@ from models.reservation import Reservation, ReservationCreate, ReservationRead, 
 
 router = APIRouter()
 
+from decimal import Decimal
+from datetime import date
+from fastapi import HTTPException, status
+from sqlmodel import Session, select
+from models.room import Room # Asegúrate de que este modelo exista
+from models.reservation import Reservation # Asegúrate de que este modelo exista
+
 def calculate_total_reservation(session: Session, reservation: Reservation) -> Decimal:
-    """Calcula el total de la reserva basado en las fechas y el precio por noche de la habitación."""
     try:
+        #  VALIDACIÓN DE FECHAS 
+        if reservation.check_out_date <= reservation.check_in_date:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="La fecha de salida (check-out) debe ser posterior a la fecha de entrada (check-in)."
+            )
+
         room = session.exec(select(Room).where(Room.id == reservation.room_id)).first()
-        if room:
-            # Revisa estas dos líneas. Si duration.days es 0 o negativo, total será 0.
-            duration = reservation.check_out_date - reservation.check_in_date
-            total = room.price_per_night * Decimal(duration.days)
-            
-            # Agrega un print aquí para depurar
-            print(f"DEBUG: Room Price: {room.price_per_night}, Check-in: {reservation.check_in_date}, Check-out: {reservation.check_out_date}, Duration Days: {duration.days}, Calculated Total: {total}")
-            
-            return total
-        return Decimal(0.00) # <--- Esto se devuelve si la habitación no se encuentra
+        if not room:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Room not found for reservation calculation."
+            )
+
+        # Calculamos la duración inicial en días
+        duration_delta = reservation.check_out_date - reservation.check_in_date
+        duration_days = duration_delta.days
+
+        # Aplicamos la lógica: si la duración es 0 o negativa, la cambiamos a 1 día
+        if duration_days <= 0:
+            print(f"ADVERTENCIA: Duración de reserva es {duration_days} días. Se ajusta a 1 día para el cálculo.")
+            duration_days = 1
+        
+        # Realizamos la multiplicación con la duración ajustada
+        total = room.price_per_night * Decimal(duration_days)
+        
+        # Agregamos el print de depuración para ver los valores
+        print(f"DEBUG DE CÁLCULO: Room ID: {reservation.room_id}, Price: {room.price_per_night}, Check-in: {reservation.check_in_date}, Check-out: {reservation.check_out_date}, Días Calculados: {duration_days}, Total Final: {total}")
+        
+        return total
+    
     except ValueError as ve:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid input data: {str(ve)}"
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid date format or data for reservation calculation: {str(ve)}"
         )
+    except HTTPException: # Re-raise HTTPException si ya fue levantada (como "Room not found" o la nueva validación de fechas)
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error calculating total: {str(e)}"
+            detail=f"Error calculating total for reservation: {str(e)}"
         )
-
 # POST para crear una nueva reserva
 @router.post("/api/reservations/", response_model=ReservationRead, status_code=status.HTTP_201_CREATED, tags=["RESERVATION"],dependencies=[(Depends(decode_token))])
 def create_reservation(reservation_create: ReservationCreate, session: SessionDep):
