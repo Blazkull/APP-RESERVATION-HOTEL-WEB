@@ -10,6 +10,8 @@
 [![Postman](https://img.shields.io/badge/Postman-API%20Client-orange.svg)](https://www.postman.com/)
 [![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-IDE-blue.svg)](https://code.visualstudio.com/)
 [![Warp](https://img.shields.io/badge/Warp-Terminal-black.svg)](https://warp.dev/)
+[![OAuth2](https://img.shields.io/badge/OAuth2-Authorization-blue.svg)](https://oauth.net/2/)
+[![JWT](https://img.shields.io/badge/JWT-Authentication-yellow.svg)](https://jwt.io/)
 
 ---
 
@@ -143,7 +145,31 @@ Una vez hecho esto, accede a la documentación generada automáticamente:
 
 Consulta toda la documentación en `/docs` para explorar todos los recursos disponibles.
 
+## 🔐 AUTENTICACIÓN Y SEGURIDAD CON JWT
 
+Para garantizar la seguridad de los endpoints, se ha implementado **autenticación basada en tokens JWT (JSON Web Token)**. Esta metodología permite proteger los recursos sensibles de la API y garantizar que solo usuarios autenticados puedan acceder a ciertas rutas.
+
+### 🛡️ ¿Cómo funciona JWT en esta API?
+
+1. **Login del usuario:**
+   - El usuario debe enviar sus credenciales (usuario y contraseña) mediante una petición `POST` al endpoint `/login/`.
+   - Si las credenciales son válidas, el servidor responde con un token JWT de acceso.
+
+2. **Token de acceso:**
+   - Este token contiene información codificada como el ID del usuario y su tipo (rol).
+   - El token tiene una **fecha de expiración** configurable (por defecto, 30 minutos o según la lógica definida en tu archivo de configuración).
+
+3. **Uso del token:**
+   - El token debe ser enviado en el encabezado de las peticiones HTTP que acceden a recursos protegidos:
+     ```http
+     Authorization: Bearer <token_de_acceso>
+     ```
+
+4. **Protección de rutas:**
+   - Los endpoints sensibles están protegidos usando dependencias de seguridad de FastAPI que validan y decodifican el token antes de ejecutar la lógica de negocio.
+   - Si el token es inválido o ha expirado, se devuelve un error `401 Unauthorized`.
+  
+   - 
 ## ⚙ Diagrama entidad relacion base de datos
 
 
