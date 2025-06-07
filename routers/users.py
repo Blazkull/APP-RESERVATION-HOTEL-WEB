@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from core.security import decode_token
+from core.security import decode_token,hash_password, verify_password
 from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase, UserStatus
 from core.database import SessionDep
 
@@ -43,7 +43,9 @@ def create_user(user_data: UserCreate,session: SessionDep):
 
     try:
         #validate
+        hashed_password = hash_password(user_data.password)
         user = User.model_validate(user_data.model_dump())
+        user.password = hashed_password
         existing_user=session.exec(select(User).where(User.username == user.username)).first()
         if existing_user:
             raise HTTPException(
@@ -61,6 +63,13 @@ def create_user(user_data: UserCreate,session: SessionDep):
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
+        
+        #validador longitud de contraseña
+        if len(user.password) < 6:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="The password must be at least 6 characters."
+            )
+
         session.add(user)#insertamos datos
         session.commit()#conectamos la bd
         session.refresh(user)#refrescamos despues de insertar datos
@@ -166,13 +175,20 @@ def update_user_password(user_id: int, password_update: PasswordUpdate, session:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User doesn't exist"
             )
-
-        if password_update.password == user_db.password:
+        
+        # Verificar la longitud de la nueva contraseña
+        if len(password_update.password) < 6:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password min:8 caracters"
+                status_code=status.HTTP_400_BAD_REQUEST, detail="The password must be at least 6 characters."
             )
 
-        user_db.password = password_update.password  
+        # Verificar si la nueva contraseña es igual a la actual (hasheada)
+        if verify_password(password_update.password, user_db.password): # Usar verify_password
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="New password cannot be the same as the old password."
+            )
+
+        user_db.password = hash_password(password_update.password) # Hashear la nueva contraseña
         session.add(user_db)
         session.commit()
         return {"message": f"User '{user_db.username}' has successfully updated their password"}
@@ -182,4 +198,4 @@ def update_user_password(user_id: int, password_update: PasswordUpdate, session:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred while updating password: {str(e)}",
-        )  
+        )

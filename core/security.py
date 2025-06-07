@@ -1,15 +1,15 @@
-
 from datetime import datetime, timedelta
 from sqlmodel import select
 from core.database import SessionDep
-from models.user import  User
+from models.user import User
 from typing import Annotated
 from fastapi import Depends
-from fastapi.security import  OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.exceptions import HTTPException
 from models.token import Token as DBToken
 
 from jose import JWTError, jwt
+from passlib.hash import pbkdf2_sha256 # Importa el algoritmo de hashing
 
 from dotenv import load_dotenv
 import os
@@ -17,10 +17,18 @@ import os
 load_dotenv()
 SECRET_KEY= os.getenv('SECRET_KEY')
 ALGORITHM= os.getenv('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  #24 horas = 1440 minutos
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
 
 #instancia de una clase
 outh2_scheme= OAuth2PasswordBearer(tokenUrl="token")
+
+def hash_password(password: str) -> str:
+    """Hashea una contraseña."""
+    return pbkdf2_sha256.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verifica una contraseña plain contra una hasheada."""
+    return pbkdf2_sha256.verify(plain_password, hashed_password)
 
 def encode_token(data:dict):
     to_encode = data.copy()
@@ -61,4 +69,3 @@ def decode_token(token: Annotated[str, Depends(outh2_scheme)], session: SessionD
     except Exception as e:
         # Captura cualquier otra excepción inesperada
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
-
