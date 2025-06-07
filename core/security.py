@@ -17,13 +17,13 @@ import os
 load_dotenv()
 SECRET_KEY= os.getenv('SECRET_KEY')
 ALGORITHM= os.getenv('ALGORITHM')
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')) 
 
 #instancia de una clase
 outh2_scheme= OAuth2PasswordBearer(tokenUrl="token")
 
 def hash_password(password: str) -> str:
-    """Hashea una contraseña usando bcrypt."""
+    #Hasheao con  bcrypt
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashed_password.decode('utf-8') # Decodifica a string para guardar en la DB
 
@@ -32,7 +32,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         # bcrypt.checkpw verifica si la contraseña plana coincide con la hasheada
         return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
     except ValueError:
-        # Esto puede ocurrir si el hash_password no es un hash bcrypt válido
         return False
 
 def encode_token(data:dict):

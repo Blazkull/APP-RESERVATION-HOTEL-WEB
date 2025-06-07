@@ -2,7 +2,7 @@ from datetime import datetime
 from fastapi import APIRouter, status, HTTPException
 from sqlmodel import select
 from core.database import SessionDep
-from core.security import encode_token , ACCESS_TOKEN_EXPIRE_MINUTES
+from core.security import encode_token , ACCESS_TOKEN_EXPIRE_MINUTES, verify_password
 from models.user import  User, UserLogin
 from models.token import AccessTokenResponse,Token as DBToken
 
@@ -19,9 +19,12 @@ def login(user_data:UserLogin,session: SessionDep):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="User not found",
             )
-        if user_data.password != user_db.password:
+        
+        #verificador de clave
+        if not verify_password(user_data.password, user_db.password):
             raise HTTPException(status_code=400,detail="Invalid credentials")
-        # Invalida todos los tokens anteriores para este usuario
+        
+        # invalidar tokens y crear uno nuevo
         existing_tokens = session.exec(
             select(DBToken).where(DBToken.user_id == user_db.id, DBToken.status_token == True)
         ).all()
@@ -30,7 +33,7 @@ def login(user_data:UserLogin,session: SessionDep):
             session.add(token_entry)
         session.commit() # Guarda los cambios de invalidación
 
-        # Crea un nuevo token (at=acces token)
+        # Crea un nuevo token 
         encoded_jwt, expires_at = encode_token({"username": user_data.username, "email": user_db.email})
 
         # Almacena el nuevo token en la base de datos
@@ -43,12 +46,12 @@ def login(user_data:UserLogin,session: SessionDep):
         )
         session.add(new_token_db)
         session.commit()
-        session.refresh(new_token_db) # Refresca para obtener el ID si lo necesitas
+        session.refresh(new_token_db)
 
         return {"acces_token": encoded_jwt, "token_type": "bearer"} 
     
     except HTTPException as http_exc:
-        raise http_exc # Re-lanza las HTTPException directamente
+        raise http_exc
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
