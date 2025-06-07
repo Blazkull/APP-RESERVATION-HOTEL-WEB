@@ -9,7 +9,7 @@ from fastapi.exceptions import HTTPException
 from models.token import Token as DBToken
 
 from jose import JWTError, jwt
-from passlib.hash import pbkdf2_sha256 # Importa el algoritmo de hashing
+import bcrypt
 
 from dotenv import load_dotenv
 import os
@@ -23,12 +23,17 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
 outh2_scheme= OAuth2PasswordBearer(tokenUrl="token")
 
 def hash_password(password: str) -> str:
-    """Hashea una contraseña."""
-    return pbkdf2_sha256.hash(password)
+    """Hashea una contraseña usando bcrypt."""
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_password.decode('utf-8') # Decodifica a string para guardar en la DB
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifica una contraseña plain contra una hasheada."""
-    return pbkdf2_sha256.verify(plain_password, hashed_password)
+    try:
+        # bcrypt.checkpw verifica si la contraseña plana coincide con la hasheada
+        return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+    except ValueError:
+        # Esto puede ocurrir si el hash_password no es un hash bcrypt válido
+        return False
 
 def encode_token(data:dict):
     to_encode = data.copy()
@@ -67,5 +72,4 @@ def decode_token(token: Annotated[str, Depends(outh2_scheme)], session: SessionD
     except JWTError: #recoleccion de errores especificos
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception as e:
-        # Captura cualquier otra excepción inesperada
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
