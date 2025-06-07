@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from pydantic import ValidationError
 from sqlmodel import select
 
-from core.security import decode_token, hash_password, verify_password # Asegúrate de importar verify_password
+from core.security import decode_token, hash_password, verify_password
 from models.user import PasswordUpdate, User, UserCreate, UserUpdate, UserBase, UserStatus
 from core.database import SessionDep
 
@@ -38,7 +38,7 @@ def read_user(user_id: int, session: SessionDep):
         )
 
 #crear  usuario
-@router.post("/api/user", response_model=User, status_code=status.HTTP_201_CREATED ,tags=["USER"])
+@router.post("/api/user", response_model=User, status_code=status.HTTP_201_CREATED ,tags=["USER"],dependencies=[(Depends(decode_token))])
 def create_user(user_data: UserCreate,session: SessionDep):
 
     try:
@@ -48,27 +48,26 @@ def create_user(user_data: UserCreate,session: SessionDep):
                 status_code=status.HTTP_400_BAD_REQUEST, detail="The password must be at least 6 characters."
             )
         
-        # validate y hashear la contraseña
+        # Validar y hashear la contraseña
         hashed_password = hash_password(user_data.password)
-        user = User.model_validate(user_data.model_dump(exclude={"password"})) # Excluir la contraseña plana
-        user.password = hashed_password # Asignar la contraseña hasheada
         
+        user_data_dict = user_data.model_dump()
+        user_data_dict["password"] = hashed_password
+        
+        
+        user = User.model_validate(user_data_dict) 
+
+        # Validaciones de existencia de username y email
         existing_user = session.exec(select(User).where(User.username == user.username)).first()
         if existing_user:
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
-        #validador de email
+        
         existing_email = session.exec(select(User).where(User.email == user.email)).first()
         if existing_email:
             raise HTTPException(
                status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered" 
-            )
-        #validador de username
-        existing_username = session.exec(select(User).where(User.username == user.username)).first()
-        if existing_username:
-            raise HTTPException(
-               status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered" 
             )
         
         session.add(user)
@@ -87,7 +86,6 @@ def create_user(user_data: UserCreate,session: SessionDep):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred while creating user: {str(e)}",
         )
-    
 
     
 
